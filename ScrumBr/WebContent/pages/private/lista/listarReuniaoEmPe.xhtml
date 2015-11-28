@@ -1,0 +1,229 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/padrao_administracao.xhtml">
+
+
+<ui:define name="cabecalho">
+		<h:form id="FormularioTopo">
+
+			<div class="links_funcionais">
+				<div class="titulo_links_funcionais">
+					<div class="titulo_links_funcionais_imagem">
+						<h:graphicImage library="cabecalho" name="icones-daily-scrum.png" />
+					</div>
+					<h1>
+						<h:outputText value="Listagem reunião diária"/>
+					</h1>
+					<h2>
+						<h:outputText value="Lista de todos os registros das reuniões diárias."/>
+					</h2>
+				</div>
+
+				<div class="menu_links_funcionais">
+					<h:commandLink id="lnkHome" action="/pages/private/inicio.xhtml"
+						immediate="true" title="Voltar para página inicial">
+						<div class="menu_links_funcionais_home"></div>
+						<h:outputText value="Home" />
+					</h:commandLink>
+
+					<h:commandLink id="lnkCadastraFluxo" action="#{reuniaoEmPeBean.prepareSave()}"
+						immediate="true"
+						title="Clique neste botão para abrir tela de cadastro.">
+						<div class="menu_links_funcionais_listar"></div>
+						<h:outputText value="Registrar reunião" />
+					</h:commandLink>
+
+				</div>
+
+				<div style="clear: both" />
+
+			</div>
+
+		</h:form>
+	</ui:define>
+	<ui:define name="body">
+
+		<t:saveState value="#{reuniaoEmPeBean.reuniaoEmPe}" />
+		<t:saveState value="#{reuniaoEmPeBean.lazy}" />
+
+		<h:form id="formulario">
+
+			<p:panel header="Campos de pesquisa" toggleable="true">
+
+				<h:panelGrid columns="10">
+
+					<p:outputLabel value="Data de cadastro - De: "
+						styleClass="myLabel" />
+					<h:panelGroup>
+						<p:inputMask id="dataInicio"
+							value="#{reuniaoEmPeBean.reuniaoEmPeFilter.dataReuniaoInicio}"
+							placeHolder=" " mask="99/99/9999" size="10"
+							validatorMessage="Não é uma data válida">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:inputMask>
+						<p:outputLabel value=" Até: " styleClass="myLabel" />
+						<p:inputMask
+							value="#{reuniaoEmPeBean.reuniaoEmPeFilter.dataReuniaoFim}"
+							placeHolder=" " mask="99/99/9999" size="10"
+							validatorMessage="Não é uma data válida">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:inputMask>
+					</h:panelGroup>
+						<p:outputLabel value="Participante:" styleClass="myLabel"/>
+						<p:selectOneMenu id="participante"
+							value="#{reuniaoEmPeBean.reuniaoEmPeFilter.participante}"
+							size="30"
+							converterMessage="Não foi possível selecionar o Responsável da tarefa(Erro ao converter o objeto)"
+							converter="genericConverter">
+							<f:selectItem itemLabel="Selecione o participante" />
+							<f:selectItems value="#{usuarioBean.usuarios}" var="user"
+								itemLabel="#{user.nome}" itemValue="#{user}" />
+						</p:selectOneMenu>
+ 					<p:commandButton value="Buscar" icon="ui-icon-search"
+						styleClass="btn-blue" action="#{reuniaoEmPeBean.list()}"
+						update=":formulario:tabelaReuniaoEmPe" />
+				</h:panelGrid>
+			</p:panel>
+
+			<br />
+
+			<p:dataTable id="tabelaReuniaoEmPe" value="#{reuniaoEmPeBean.lazy}"
+				lazy="true" var="entity" paginator="true" rows="10"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{currentPage} de {totalPages}"
+				paginatorPosition="bottom" rowIndexVar="row"
+				emptyMessage="Nenhum registro encontrado." filterEvent="enter"
+				widgetVar="dadosTabela">
+
+				<f:facet name="header">
+					<p:outputLabel value="Lista de Reuniao em Pé" />
+				</f:facet>
+
+				<p:column id="data" headerText="Data da Reunião" width="150"
+					styleClass="centralizado">
+					<h:outputText value="#{entity.dataReuniao}" />
+				</p:column>
+
+				<p:column headerText="Hora" width="60" styleClass="centralizado">
+					<h:outputText value="#{entity.dataReuniao}">
+						<f:convertDateTime pattern="HH:mm:ss" locale="pt_BR"
+							timeZone="America/Fortaleza" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Participante">
+					<h:outputText value="#{entity.usuario.nome}" />
+				</p:column>
+
+				<p:column width="60" id="view" headerText="Visualizar">
+
+					<p:commandLink oncomplete="PF('dlg').show()"
+						update=":formulario:dados">
+						<div class="icones_view" />
+						<f:setPropertyActionListener
+							target="#{reuniaoEmPeBean.reuniaoEmPe}" value="#{entity}" />
+					</p:commandLink>
+				</p:column>
+
+				<p:column headerText="Editar" width="40">
+					<p:commandLink id="lnkEditar"
+						action="#{reuniaoEmPeBean.prepareUpdate}" immediate="true"
+						ajax="false" title="Editar">
+						<div class="icones_editar"></div>
+						<f:setPropertyActionListener
+							target="#{reuniaoEmPeBean.reuniaoEmPe}" value="#{entity}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+
+
+			<br />
+			<p:panel>
+				<h:panelGrid columns="10">
+					<h:panelGroup>
+						<p:graphicImage>
+							<div class="icones_ativado" />
+						</p:graphicImage>
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<p:outputLabel value="Participante ativo" />
+						<p:spacer width="5"></p:spacer>
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<p:graphicImage>
+							<div class="icones_inativado" />
+						</p:graphicImage>
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<p:outputLabel value="Participante inativo" />
+						<p:spacer width="5"></p:spacer>
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:graphicImage>
+							<div class="icones_editar" />
+							<p:spacer width="5"></p:spacer>
+						</p:graphicImage>
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<p:outputLabel value="Editar dados do evento cadastrado." />
+						<p:spacer width="5"></p:spacer>
+					</h:panelGroup>
+
+				</h:panelGrid>
+			</p:panel>
+
+			<p:dialog id="dados" widgetVar="dlg" closable="true" 
+				closeOnEscape="true" draggable="false" header="Dados do usuário"
+				modal="true" resizable="false" showEffect="clip" hideEffect="clip">
+
+				<f:facet name="header">
+					<h:outputText
+						value="Participante: #{reuniaoEmPeBean.reuniaoEmPe.participante.nome}"
+						styleClass="labelHeader" />
+				</f:facet>
+
+				<h:panelGrid columns="2">
+					<h:outputText value="Data: " styleClass="negrito" />
+					<h:outputText value="#{reuniaoEmPeBean.reuniaoEmPe.dataReuniao}" />
+
+					<h:outputText value="Hora: " styleClass="negrito" />
+					<h:outputText value="#{reuniaoEmPeBean.reuniaoEmPe.dataReuniao}">
+						<f:convertDateTime pattern="HH:mm:ss" locale="pt_BR"
+							timeZone="America/Fortaleza" />
+					</h:outputText>
+
+					<h:outputText value="Participante: " styleClass="negrito" />
+					<h:outputText
+						value="#{reuniaoEmPeBean.reuniaoEmPe.participante.nome}" />
+
+					<h:outputText
+						value="O que você realizou desde a última reunião de equipe? "
+						styleClass="negrito" />
+					<h:outputText value="#{reuniaoEmPeBean.reuniaoEmPe.queFez}" />
+
+					<h:outputText value="Quais obstáculos está encontrando?"
+						styleClass="negrito" />
+					<h:outputText
+						value="#{reuniaoEmPeBean.reuniaoEmPe.qualDificuldade}" />
+
+					<h:outputText
+						value="O que planeja realizar até a próxima reunião da equipe?"
+						styleClass="negrito" />
+					<h:outputText value="#{reuniaoEmPeBean.reuniaoEmPe.queVaiFazer}" />
+				</h:panelGrid>
+			</p:dialog>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

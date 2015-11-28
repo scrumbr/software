@@ -1,0 +1,248 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/padrao_administracao.xhtml">
+	<ui:define name="cabecalho">
+		<h:form id="FormularioTopo">
+
+			<div class="links_funcionais">
+				<div class="titulo_links_funcionais">
+					<div class="titulo_links_funcionais_imagem">
+						<h:graphicImage library="cabecalho" name="analisar-projeto.png" />
+					</div>
+					<h1>
+						<h:outputText value="Cadastrar Projeto"
+							rendered="#{projetoBean.projeto.id == null}" />
+						<h:outputText value="Atualizar Projeto"
+							rendered="#{projetoBean.projeto.id != null}" />
+					</h1>
+					<h2>
+						<h:outputText value="Preencha os campos para cadastrar o projeto."
+							rendered="#{projetoBean.projeto.id == null}" />
+						<h:outputText value="Preencha os campos para atualizar o projeto."
+							rendered="#{projetoBean.projeto.id != null}" />
+					</h2>
+				</div>
+
+				<div class="menu_links_funcionais">
+					<h:commandLink id="lnkHome" action="/pages/private/inicio.xhtml"
+						immediate="true" title="Voltar para página inicial">
+						<div class="menu_links_funcionais_home"></div>
+						<h:outputText value="Home" />
+					</h:commandLink>
+
+					<h:commandLink id="lnkCadastraFluxo" action="#{projetoBean.goToList()}"
+						immediate="true"
+						title="Clique neste botão para listar os projetos cadastrados a esta organização.">
+						<div class="menu_links_funcionais_listar"></div>
+						<h:outputText value="Listar Projetos" />
+					</h:commandLink>
+
+				</div>
+
+				<div style="clear: both" />
+
+			</div>
+
+		</h:form>
+	</ui:define>
+
+	<ui:define name="body">
+
+		<t:saveState value="#{projetoBean.projeto}" />
+		<t:saveState value="#{projetoBean.lazy}" />
+		<t:saveState value="#{projetoBean.participante}" />
+		<t:saveState value="#{projetoBean.participantes}" />
+		<t:saveState value="#{projetoBean.participantesLazy}" />
+
+		<h:form id="formulario">
+
+			<br />
+			<p:panel header="Preencha os campos para realizar seu cadastro">
+				<h:panelGrid columns="1">
+					<h:panelGroup>
+						<h:outputText styleClass="myLabel" value="Nome:" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputText value="#{projetoBean.projeto.nome}" required="true"
+							requiredMessage="Campo 'NOME' obrigatório" size="40" id="nome" />
+							<p:watermark value="Digite um nome para o projeto" for="nome"></p:watermark>
+					</h:panelGroup>
+					
+					<h:panelGrid columns="3">
+							<h:panelGroup>
+								<br />
+								<h:outputText value="Data de Início:" styleClass="myLabel" />
+
+								<h:outputText value="* " styleClass="campoObrigatorio" />
+								<h:outputLabel value="(Ex: 10/10/2015)"
+									styleClass="textoExemplo" />
+								<br />
+								<p:inputMask size="20" id="dataInicio"
+									value="#{projetoBean.projeto.dataInicio}"
+									title="Digite a data de inicio" maxlength="70" required="true"
+									requiredMessage="Campo data de inicio é obrigatório!"
+									mask="99/99/9999">
+									<p:watermark value="99/99/9999" for="dataInicio"></p:watermark>
+								</p:inputMask>
+							</h:panelGroup>
+							<p:spacer width="20px"></p:spacer>
+							<h:panelGroup>
+								<br />
+								<h:outputText value="Previsão de Término:" styleClass="myLabel" />
+
+								<h:outputText value="* " styleClass="campoObrigatorio" />
+								<h:outputLabel value="(Ex: 10/12/2015)"
+									styleClass="textoExemplo" />
+								<br />
+								<p:inputMask size="20" id="previsaoTermino"
+									title="Digite a data de previsão de termino" maxlength="70"
+									required="true" value="#{projetoBean.projeto.previsaoTermino}"
+									requiredMessage="Campo data de previsão de término é obrigatório!"
+									mask="99/99/9999">
+									<p:watermark value="99/99/9999" for="previsaoTermino"></p:watermark>
+
+									<p:ajax event="blur" listener="#{projetoBean.verificaDatas()}" />
+								</p:inputMask>
+							</h:panelGroup>
+						</h:panelGrid>
+
+					<h:panelGrid columns="2">
+						<h:outputText value="Adicionar participante" styleClass="myLabel" />
+						<p:commandLink id="addParticipante"
+							oncomplete="PF('dlgParticipante').show()" immediate="true"
+							title="Adicionar participante"
+							action="#{projetoBean.updateTableParticipantes()}"
+							update=":Formulario2:dadosTabelaDlg">
+							<div class="icones_new" />
+						</p:commandLink>
+
+					</h:panelGrid>
+
+					<p:dataTable id="dadosTabela" value="#{projetoBean.participantes}"
+						var="entity" emptyMessage="Nenhum registro encontrado."
+						widgetVar="dadosTabela" lazy="true">
+
+						<p:column id="nome" headerText="Nome" styleClass="centralizado">
+							<h:outputText value="#{entity.nome}" />
+						</p:column>
+
+						<p:column headerText="E-mail" styleClass="centralizado">
+							<h:outputText value="#{entity.email}" />
+						</p:column>
+
+						<p:column headerText="Perfil" styleClass="centralizado">
+							<h:outputText value="#{entity.perfilUser.descricao}" />
+						</p:column>
+
+						<p:column headerText="Remover participante">
+							<p:commandLink action="#{projetoBean.removerParticipante()}"
+								immediate="true" title="Remover participante do projeto"
+								update="dadosTabela">
+								<div class="icones_excluir" />
+								<f:setPropertyActionListener
+									target="#{projetoBean.participante}" value="#{entity}" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+				</h:panelGrid>
+			</p:panel>
+			<p:panel>
+				<p:commandButton value="Cadastrar" action="#{projetoBean.save}"
+					styleClass="btn-green" id="add" ajax="false" icon="fa fa-save"
+					 rendered="#{projetoBean.projeto.id == null}" />
+					<p:tooltip value="Adicionar um projeto" for="add" />
+
+				<p:commandButton value="Atualizar" action="#{projetoBean.update}"
+					icon="fa fa-edit" styleClass="btn-green" id="editar"
+					ajax="false" rendered="#{projetoBean.projeto.id != null}" />
+					<p:tooltip for="editar" value="Clique aqui para atualizar o projeto"/>
+
+				<p:commandButton value="Cancelar" icon="fa fa-ban" styleClass="btn-green" id="cancel"
+					action="/pages/private/cadastro/index.xhtml" ajax="false"
+					immediate="true" rendered="#{projetoBean.projeto.id == null}" />
+					<p:tooltip for="cancel" value="Clique aqui para cancelar o cadastro"/>
+
+				<p:commandButton value="Cancelar" action="#{projetoBean.goToList()}"
+					ajax="false" immediate="true" icon="fa fa-ban" styleClass="btn-green" id="cancelar"
+					rendered="#{projetoBean.projeto.id != null}" />
+					<p:tooltip for="cancelar" value="Clique aqui para cancelar o cadastro"/>
+			</p:panel>
+		</h:form>
+		<h:form id="Formulario2" prependId="false">
+
+			<p:dialog header="" resizable="false" closeOnEscape="true"
+				modal="true" id="dlgParticipante" widgetVar="dlgParticipante"
+				width="1000" maximizable="true">
+
+				<p:messages showDetail="true" showSummary="true" autoUpdate="true" />
+
+				<f:facet name="header">
+					<h:outputText value="Adicionar participante"
+						styleClass="labelHeader" />
+				</f:facet>
+
+				<p:panel header="Campos de pesquisa">
+					<h:panelGrid columns="15">
+						<h:outputText value="Nome: " styleClass="myLabel" />
+						<p:inputText id="nomeFilter"
+							value="#{projetoBean.participanteFilter.nome}" maxlength="20"
+							size="40">
+						</p:inputText>
+						<h:outputText value="E-mail: " styleClass="myLabel" />
+						<p:inputText id="emailFilter"
+							value="#{projetoBean.participanteFilter.email}" maxlength="20">
+						</p:inputText>
+
+						<p:commandButton value="Buscar" icon="ui-icon-search"
+							action="#{projetoBean.listFilter()}" styleClass="btn-blue"
+							process="nomeFilter emailFilter @this" update="dadosTabelaDlg" />
+					</h:panelGrid>
+				</p:panel>
+
+				<p:dataTable id="dadosTabelaDlg"
+					value="#{projetoBean.participantesLazy}" var="entity"
+					paginator="true" rows="10" rowIndexVar="index"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{currentPage} de {totalPages}"
+					paginatorPosition="bottom"
+					emptyMessage="Nenhum registro encontrado." widgetVar="dadosTabela"
+					lazy="true">
+
+					<p:column id="nome" headerText="Nome" styleClass="centralizado">
+						<h:outputText value="#{entity.nome}" />
+					</p:column>
+
+					<p:column headerText="E-mail" styleClass="centralizado">
+						<h:outputText value="#{entity.email}" />
+					</p:column>
+
+					<p:column headerText="Perfil" styleClass="centralizado">
+						<h:outputText value="#{entity.perfilUser.descricao}" />
+					</p:column>
+
+					<p:column headerText="Adicionar participante">
+						<p:commandLink action="#{projetoBean.addParticipante()}"
+							title="Adicionar participante ao projeto"
+							update=":formulario:dadosTabela dadosTabelaDlg ">
+							<div class="icones_selecionar"></div>
+							<f:setPropertyActionListener target="#{projetoBean.participante}"
+								value="#{entity}" />
+						</p:commandLink>
+					</p:column>
+
+				</p:dataTable>
+
+
+			</p:dialog>
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>

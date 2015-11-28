@@ -1,0 +1,221 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/padrao_administracao.xhtml">
+
+<ui:define name="cabecalho">
+		<h:form id="FormularioTopo">
+
+			<div class="links_funcionais">
+				<div class="titulo_links_funcionais">
+					<div class="titulo_links_funcionais_imagem">
+						<h:graphicImage library="cabecalho" name="icones-sprint-backlog.png" />
+					</div>
+					<h1>
+						<h:outputText value="Cadastrar Sprint"
+							rendered="#{sprintBean.sprint.id == null}" />
+						<h:outputText value="Atualizar Sprint"
+							rendered="#{sprintBean.sprint.id != null}" />
+					</h1>
+					<h2>
+						<h:outputText value="Preencha os campos para cadastrar uma Sprint."
+							rendered="#{sprintBean.sprint.id == null}" />
+						<h:outputText value="Preencha os campos para atualizar a Sprint."
+							rendered="#{sprintBean.sprint.id != null}" />
+					</h2>
+				</div>
+
+				<div class="menu_links_funcionais">
+					<h:commandLink id="lnkHome" action="/pages/private/inicio.xhtml"
+						immediate="true" title="Voltar para página inicial">
+						<div class="menu_links_funcionais_home"></div>
+						<h:outputText value="Home" />
+					</h:commandLink>
+
+					<h:commandLink id="lnkListarSprint" action="#{sprintBean.goToList()}"
+						immediate="true"
+						title="Clique neste botão para listar as Sprints do projeto.">
+						<div class="menu_links_funcionais_listar"></div>
+						<h:outputText value="Listar Sprints" />
+					</h:commandLink>
+
+				</div>
+
+				<div style="clear: both" />
+
+			</div>
+
+		</h:form>
+	</ui:define>
+	<ui:define name="body">
+
+		<t:saveState value="#{sprintBean.sprint}" />
+		<t:saveState value="#{sprintBean.lazy}" />
+		<t:saveState value="#{sprintBean.productBacklog}" />
+		<t:saveState value="#{sprintBean.productBacklogs}" />
+		<t:saveState value="#{sprintBean.productBacklogLazy}" />
+
+		<h:form id="formulario">
+
+			<br />
+			<p:panel >
+			<f:facet name="header">
+			<h:outputText value="Dados da Sprint" styleClass="labelHeaderPanel"/>
+			</f:facet>
+			
+			<h:panelGrid columns="2">
+				<h:panelGroup>
+					<br />
+					<h:outputText styleClass="myLabel" value="Nome:" />
+					<h:outputText value=" * " styleClass="campoObrigatorio" />
+					<br />
+					<p:inputText value="#{sprintBean.sprint.nome}" required="true"
+						requiredMessage="Campo 'NOME' obrigatório" size="40" id="nome"/>
+						<p:watermark value="Digite o nome da Sprint" for="nome"/>
+				</h:panelGroup>
+				<h:panelGroup>
+					<br />
+					<h:outputText styleClass="myLabel" value="Data de inicio:" />
+					<h:outputText value=" * " styleClass="campoObrigatorio" />
+					<br />
+					<p:calendar pattern="dd/MM/yyyy"
+						value="#{sprintBean.sprint.dataInicio}" required="true"
+						requiredMessage="Campo 'Data de inicio' é obrigatório!" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<br />
+					<h:outputText styleClass="myLabel" value="Quantidade de dias:" />
+					<h:outputText value=" * " styleClass="campoObrigatorio" />
+					<br />
+					<p:spinner id="step" value="#{sprintBean.sprint.qtdDias}"
+						stepFactor="1">
+						<p:ajax event="change" update="data list"
+							listener="#{sprintBean.setarDataFinal()}" />
+					</p:spinner>
+				</h:panelGroup>
+				<h:outputText styleClass="myLabel" value="Data final de Sprint:" />
+				</h:panelGrid>
+				<br />
+				<p:outputLabel value="#{sprintBean.sprint.dataFim}" id="data" rendered="#{!empty sprintBean.sprint.dataInicio}"/>
+				<p:outputLabel value="xx/xx/xxxx" id="data1" rendered="#{empty sprintBean.sprint.dataInicio}"/>
+				<h:outputText styleClass="myLabel" value="Dias úteis da Sprint:" />
+				<h:panelGrid id="list">
+					<h:panelGroup>
+						<ui:repeat var="data" value="#{sprintBean.retornaDatasNaoUteis()}">
+							<h:outputText value="#{data.toDate()}">
+								<f:convertDateTime pattern="dd/MM/yyyy"  />
+							</h:outputText>
+							<h:outputText value=" --- " styleClass="myLabel"/>
+						</ui:repeat>
+					</h:panelGroup>
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+				
+				<p:commandButton value="Adicionar atividade" oncomplete="PF('dlgProductBacklog').show()" immediate="true"
+						action="#{sprintBean.updateTableProductBacklog()}" icon="fa fa-plus-circle"
+						update=":Formulario2:dadosTabelaProductBacklog" styleClass="btn-blue" id="add"/>
+						<p:tooltip value="Abrir lista de atividades" for="add"/>
+
+				</h:panelGrid>
+
+				<p:dataTable id="tableProductBacklog" var="entity"
+					value="#{sprintBean.productBacklogs}"
+					emptyMessage="Nenhuma parceria foi inserida na lista"
+					rowIndexVar="index">
+
+					<p:column id="nome" headerText="Nome">
+						<h:outputText value="#{entity.nome}" />
+					</p:column>
+
+					<p:column headerText="Remover atividade" width="150">
+						<p:commandLink action="#{sprintBean.removerProductBacklog()}"
+							immediate="true" title="Remover atividade"
+							update="tableProductBacklog">
+							<div class="icones_excluir" />
+							<f:setPropertyActionListener
+								target="#{sprintBean.productBacklog}" value="#{entity}" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+				<br />
+			</p:panel>
+			<p:panel>
+				<p:commandButton value="Cadastrar" action="#{sprintBean.save}" id="save" 
+					ajax="false" rendered="#{sprintBean.sprint.id == null}" icon="fa fa-save" styleClass="btn-green"/>
+					<p:tooltip value="Clique para Salvar a Sprint" for="save"/>					
+
+				<p:commandButton value="Atualizar" action="#{sprintBean.update}" id="edit"
+					ajax="false" rendered="#{sprintBean.sprint.id != null}" icon="fa fa-edit" styleClass="btn-green"/>
+					<p:tooltip value="Clique para Atualizar a Sprint" for="edit"/>	
+
+				<p:commandButton value="Cancelar" icon="fa fa-ban" styleClass="btn-green"
+					action="/pages/private/cadastro/index.xhtml" ajax="false" id="cancel"
+					immediate="true" rendered="#{sprintBean.sprint.id == null}" />
+					<p:tooltip value="Cancelar cadastro da sprint" for="cancel"/>	
+
+				<p:commandButton value="Cancelar" action="#{sprintBean.goToList()}"
+					ajax="false" immediate="true" icon="fa fa-ban" styleClass="btn-green"
+					rendered="#{sprintBean.sprint.id != null}" id="cancelar"/>
+					<p:tooltip value="Cancelar atualização da sprint" for="cancelar"/>	
+			</p:panel>
+		</h:form>
+
+		<h:form id="Formulario2" prependId="false">
+
+			<p:dialog resizable="false" closeOnEscape="true" modal="true"
+				id="dlgProductBacklog" widgetVar="dlgProductBacklog"
+				maximizable="true">
+
+				<p:messages showDetail="true" showSummary="true" autoUpdate="true" />
+
+				<f:facet name="header">
+					<h:outputText value="Adicionar atividade" styleClass="labelHeader" />
+				</f:facet>
+
+				<p:panel header="Campos de pesquisa">
+					<h:panelGrid columns="05">
+						<h:panelGroup>
+							<p:outputLabel value="Nome " styleClass="myLabel" />
+							<p:inputText id="nomeProductBacklogFilter"
+								value="#{sprintBean.productBacklogFilter.nome}" />
+						</h:panelGroup>
+						<p:commandButton value="Buscar" styleClass="btn-blue"
+							action="#{sprintBean.filtrarProductBacklog()}"
+							process="nomeProductBacklogFilter @this"
+							update="dadosTabelaProductBacklog" />
+					</h:panelGrid>
+				</p:panel>
+
+				<br />
+
+				<p:dataTable id="dadosTabelaProductBacklog"
+					value="#{sprintBean.productBacklogLazy}" var="entity"
+					paginator="true" rows="10" rowIndexVar="index"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{currentPage} de {totalPages}"
+					paginatorPosition="bottom"
+					emptyMessage="Nenhum registro encontrado."
+					widgetVar="dadosTabelaParceria" lazy="true">
+					<p:column id="nome" headerText="Nome">
+						<h:outputText value="#{entity.nome}" />
+					</p:column>
+					<p:column headerText="Adicionar atividade" width="120">
+						<p:commandLink action="#{sprintBean.addProductBacklog()}"
+							title="Adicionar atividade a sprint"
+							update=":formulario:tableProductBacklog dadosTabelaProductBacklog">
+							<div class="icones_selecionar"></div>
+							<f:setPropertyActionListener
+								target="#{sprintBean.productBacklog}" value="#{entity}" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+
+		<property name="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</property>
+		<property name="hibernate.connection.datasource">java:comp/env/jdbc/scrumbr</property>
+		<property name="hibernate.bytecode.use_reflection_optimizer">true</property>
+		<property name="hibernate.show_sql">true</property>
+		<property name="hibernate.format_sql">true</property>
+		<property name="hibernate.comments">true</property>
+		<property name="hibernate.temp.use_jdbc_metadata_defaults">false</property>
+		<property name="hibernate.connection.useUnicode">true</property>
+		<property name="hibernate.connection.characterEncoding">utf8</property>
+		<property name="hibernate.connection.charSet">utf8</property>
+		<property name="hibernate.hbm2ddl.auto">update</property>
+
+		<mapping class="br.web.scrumbr.entity.Usuario" />
+		<mapping class="br.web.scrumbr.entity.Projeto" />
+		<mapping class="br.web.scrumbr.entity.Tarefa" />
+		<mapping class="br.web.scrumbr.entity.ProductBacklog" />
+		<mapping class="br.web.scrumbr.entity.Sprint" />
+		<mapping class="br.web.scrumbr.entity.ReuniaoEmPe" />
+			<mapping class="br.web.scrumbr.entity.HistoricoAlteracaoTarefa" />
+		
+
+	</session-factory>
+</hibernate-configuration>

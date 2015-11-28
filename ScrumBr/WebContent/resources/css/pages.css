@@ -1,0 +1,137 @@
+@CHARSET "UTF-8";
+
+body {
+  background: radial-gradient(#FFFFFF, #252525);
+  width: 99%;
+  height: 100%;
+  padding-top: 568px;
+}
+
+.panel{
+	padding-top: 10%;
+	
+}
+
+.home {
+  background-image: url("../resources/img/home.png");
+  border-radius: 5px 5px 5px 5px;
+  height: 31px;
+  margin: 0 auto 7px;
+  width: 30px;
+}
+
+
+.error {
+  font-size: 70px;
+  color: #fb5e00;
+  font-weight: bold;
+}
+
+.error-info{
+	font-size: 35px;
+	color: #808080;
+	font-weight: bold;
+}
+
+.error-detail{
+	font-size: 30px;
+	color: #000000;
+}
+ 
+.rotulo{
+	color:#fff;
+	padding-bottom: 5px;
+	font-size: 20px;
+}
+
+/*------------------------------------------*/
+
+.not-found {
+  font-size: 70px;
+  color: #0080AF;
+  font-weight: bold;
+}
+
+.access-denied {
+  font-size: 70px;
+  color: #F7CD5D;
+  font-weight: bold;
+}
+
+
+.menu_links_funcionais_home {
+	background-image: url("../template/imagens/icones_333333.png");
+	background-position: -609px -98px;
+	border-radius: 5px 5px 5px 5px;
+	height: 31px;
+	margin: 0 auto 7px;
+	width: 30px;
+	-webkit-transition: 0.3s all ease;
+	-moz-transition: 0.3s all ease;
+	-o-transition: 0.3s all ease;
+	z-index: 1;
+}
+
+.menu_links_funcionais_home:hover {
+	-moz-transform: scale(1.2);
+	-webkit-transform: scale(1.2);
+	-o-transform: scale(1.2);
+}
+
+.menu_links_funcionais_detalhe {
+	background-image: url("../template/imagens/icones_333333.png");
+	background-position:-378px -192px;
+	border-radius: 5px 5px 5px 5px;
+	height: 31px;
+	margin: 0 auto 7px;
+	width: 30px;
+	-webkit-transition: 0.3s all ease;
+	-moz-transition: 0.3s all ease;
+	-o-transition: 0.3s all ease;
+	z-index: 1;
+}
+
+.menu_links_funcionais_detalhe:hover {
+	-moz-transform: scale(1.2);
+	-webkit-transform: scale(1.2);
+	-o-transform: scale(1.2);
+}
+
+.menu_links_funcionais_email{
+	background-image: url("../template/imagens/icones_333333.png");
+	background-position:-378px -238px;
+	border-radius: 5px 5px 5px 5px;
+	height: 31px;
+	margin: 0 auto 7px;
+	width: 30px;
+	-webkit-transition: 0.3s all ease;
+	-moz-transition: 0.3s all ease;
+	-o-transition: 0.3s all ease;
+	z-index: 1;
+}
+
+.menu_links_funcionais_email:hover {
+	-moz-transform: scale(1.2);
+	-webkit-transform: scale(1.2);
+	-o-transform: scale(1.2);
+}
+
+.menu_links_funcionais {
+	width: 90%;
+	float: center;
+	height: 92px;
+	position: relative;
+	z-index: 1;
+}
+
+.menu_links_funcionais a {
+	display: block;
+	float: right;
+	text-align: center;
+	color: #333333;
+	margin: 10px;
+	text-decoration: none;
+	font-weight: bold
+}
+
+-378px -192px

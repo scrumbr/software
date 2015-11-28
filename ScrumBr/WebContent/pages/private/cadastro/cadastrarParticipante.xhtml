@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/padrao_administracao.xhtml">
+
+	<ui:define name="cabecalho">
+		<h:form id="FormularioTopo">
+
+			<div class="links_funcionais">
+				<div class="titulo_links_funcionais">
+					<div class="titulo_links_funcionais_imagem">
+						<h:graphicImage library="cabecalho" name="colaborador.png" />
+					</div>
+					<h1>
+						<h:outputText value="Cadastrar participante"
+							rendered="#{usuarioBean.usuario.id == null}" />
+						<h:outputText value="Atualizar Fluxo"
+							rendered="#{usuarioBean.usuario.id != null}" />
+					</h1>
+					<h2>
+						<h:outputText
+							value="Preencha os campos para cadastrar um usuário."
+							rendered="#{usuarioBean.usuario.id == null}" />
+						<h:outputText value="Preencha os campos para atualizar o usuário."
+							rendered="#{usuarioBean.usuario.id != null}" />
+					</h2>
+				</div>
+
+				<div class="menu_links_funcionais">
+					<h:commandLink id="lnkHome" action="/pages/private/inicio.xhtml"
+						immediate="true" title="Voltar para página inicial">
+						<div class="menu_links_funcionais_home"></div>
+						<h:outputText value="Home" />
+					</h:commandLink>
+
+					<h:commandLink id="lnkCadastraFluxo" action="#{usuarioBean.goToList()}"
+						immediate="true"
+						title="Clique neste botão para listar os participantes cadastrados no sistema.">
+						<div class="menu_links_funcionais_listar"></div>
+						<h:outputText value="Listar Participantes" />
+					</h:commandLink>
+
+				</div>
+
+				<div style="clear: both" />
+
+			</div>
+
+		</h:form>
+	</ui:define>
+
+
+	<ui:define name="body">
+
+		<t:saveState value="#{usuarioBean.usuario}" />
+		<t:saveState value="#{usuarioBean.lazy}" />
+
+		<h:form id="formulario">
+
+			<br />
+			<p:panel header="Preencha os campos para realizar seu cadastro">
+				<h:panelGrid columns="1">
+					<h:panelGroup>
+						<p:outputLabel value="Nome:" styleClass="myLabel" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputText value="#{usuarioBean.usuario.nome}" required="true"
+							requiredMessage="Campo 'NOME' obrigatório" size="40" id="nome"/>
+							<p:watermark value="Digite um nome para o participante" for="nome"></p:watermark>
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:outputLabel value="Sobrenome:" styleClass="myLabel"/>
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputText value="#{usuarioBean.usuario.sobrenome}"
+							required="true" requiredMessage="Campo 'SOBRENOME' obrigatório"
+							size="40" id="sobrenome" />
+							<p:watermark value="Digite um sobrenome para o participante" for="sobrenome"></p:watermark>
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:outputLabel value="Email:" styleClass="myLabel" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputText value="#{usuarioBean.usuario.email}" required="true"
+							requiredMessage="Campo 'E-mail' é obrigatório!" size="40"
+							validatorMessage="O e-mail informado não é um e-mail válido!" id="email">
+							<f:validateRegex
+								pattern="(^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$)" />
+						</p:inputText>
+						<p:watermark value="Digite o email do participante" for="email"></p:watermark>
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:outputLabel value="Perfil: " styleClass="myLabel" />
+						<p:selectOneRadio value="#{usuarioBean.usuario.perfilUser}">
+							<f:selectItems var="perfil" itemLabel="#{perfil.descricao}"
+								itemValue="#{perfil}" value="#{usuarioBean.perfis}" />
+						</p:selectOneRadio>
+					</h:panelGroup>
+				</h:panelGrid>
+			</p:panel>
+			<p:panel>
+				<p:commandButton value="Cadastrar" action="#{usuarioBean.save}"
+					styleClass="btn-green" ajax="false" id="add"
+					rendered="#{usuarioBean.usuario.id == null}" icon="fa fa-save" />
+				<p:tooltip value="Adicionar um participante" for="add" />
+
+				<p:commandButton value="Atualizar" action="#{usuarioBean.update}"
+					icon="fa fa-edit" styleClass="btn-green" id="editar"
+					ajax="false" rendered="#{usuarioBean.usuario.id != null}" />
+					<p:tooltip for="editar" value="Clique aqui para atualizar um participante"/>
+
+				<p:commandButton value="Cancelar" icon="fa fa-ban" styleClass="btn-green"
+					action="/pages/private/cadastro/index.xhtml" ajax="false" id="cancel"
+					immediate="true" rendered="#{usuarioBean.usuario.id == null}" />
+					<p:tooltip for="cancel" value="Clique aqui para cancelar o cadastro"/>
+
+				<p:commandButton value="Cancelar" action="#{usuarioBean.goToList()}"
+					ajax="false" immediate="true" icon="fa fa-ban" styleClass="btn-green"
+					rendered="#{usuarioBean.usuario.id != null}" id="cancelar" />
+					<p:tooltip for="cancelar" value="Clique aqui para cancelar o cadastro"/>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

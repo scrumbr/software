@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+
+	<WatchedResource>WEB-INF/web.xml</WatchedResource>
+
+	<Resource auth="Container" driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+	maxActive="2" maxIdle="1" maxWait="-1" name="jdbc/scrumbr" password="342210141407"
+	type="javax.sql.DataSource" url="jdbc:sqlserver://localhost:1433;databaseName=scrumbr"
+	username="sa" />
+
+<!-- 	<Resource auth="Container" driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver" -->
+<!-- 		maxActive="2" maxIdle="1" maxWait="-1" name="jdbc/scrumbr" password="masterkey" -->
+<!-- 		type="javax.sql.DataSource" url="jdbc:sqlserver://172.16.0.117:1433;databaseName=scrumbr" -->
+<!-- 		username="sa" /> -->
+		
+</Context>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui" lang="pt_BR">
+
+
+<h:head>
+	<title><h:outputText value="ScrumBR" /></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="style.css"></h:outputStylesheet>
+	<h:outputStylesheet library="css" name="animate.css"></h:outputStylesheet>
+<!-- 	<h:outputStylesheet library="css" name="estilo.css"></h:outputStylesheet> -->
+	<h:outputStylesheet library="css" name="tooltip.css" />
+	<h:outputStylesheet library="css" name="hover.css"></h:outputStylesheet>
+	<h:outputScript library="js" name="locales.js" />
+	<!-- 	<link rel="shortcut icon" type="image/x-icon" -->
+	<!-- 		href="#{facesContext.externalContext.requestContextPath}/template/imagens/fcrs-favicon.ico" /> -->
+</h:head>
+
+<h:body>
+	<div id="geral">
+		<ui:insert name="topo">
+			<div id="topo">
+
+				<h:form>
+					<p:commandLink action="#{urlBean.PAG_INICIO}"
+						rendered="#{escopoSessaoBean.usuarioLogado != null}">
+						<p:graphicImage width="150px" height="60px"
+							styleClass="scrumbr-topo" url="/template/imagens/ScrumBR.png" />
+					</p:commandLink>
+					<p:commandLink action="#{urlBean.PAG_INDEX}"
+						rendered="#{escopoSessaoBean.usuarioLogado == null}">
+						<p:graphicImage width="150px" height="60px"
+							styleClass="scrumbr-topo" url="/template/imagens/ScrumBR.png" />
+					</p:commandLink>
+					<h1>
+						<h:panelGrid columns="7" styleClass="menu-acesso"
+							rendered="#{escopoSessaoBean.usuarioLogado == null}">
+							<p:commandButton value="Entrar" ajax="false" icon="fa fa-unlock-alt"
+								action="/pages/public/login.xhtml" />
+							<span class="ou">ou</span>
+							<p:commandButton value="Cadastre-se" ajax="false"
+								action="/pages/public/assinar.xhtml" icon="fa fa-check-square-o"/>
+						</h:panelGrid>
+
+						<h:outputText value="#{projetoSessaoBean.projetoSelecionado.nome}"
+							style="padding-right:30px"
+							rendered="#{projetoSessaoBean.projetoSelecionado != null}" />
+					</h1>
+				</h:form>
+
+			</div>
+		</ui:insert>
+
+		<div id="conteudo">
+
+			<div id="menu">
+				<ui:insert name="menu">
+					<ui:include src="/template/menu_administracao.xhtml" />
+				</ui:insert>
+			</div>
+
+			<ui:insert name="mensagemAjax">
+				<p:ajaxStatus onstart="PF('statusDialog').show();"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" resizable="false"
+					header="Carregando..." draggable="false" closable="false">
+					<p:graphicImage value="/template/imagens/ajaxloadingbar.gif" />
+				</p:dialog>
+			</ui:insert>
+			<ui:insert name="cabecalho" />
+
+
+			<ui:insert name="mensagens">
+				<h:form id="formmensagem">
+					<p:messages id="mensagem" showDetail="true" showSummary="false"
+						closable="true" autoUpdate="true" />
+				</h:form>
+			</ui:insert>
+
+			<ui:insert name="body" />
+		</div>
+
+		<div class="clear" />
+
+		<footer> <ui:insert name="rodape">
+			<div id="rodape">
+				<div class="footer_image">
+					<!-- 					<p:graphicImage url="/template/imagens/fcrs-mini2.png" -->
+					<!-- 						styleClass="fcrs-footer" /> -->
+				</div>
+				<div class="footer_texto">
+					<!-- 					<span>ScrumBR - Simplificando sua vida!</span> <br></br> -->
+				</div>
+				<div class="footer_copy">
+					<ul class="footer-social">
+						<li><a href="http://facebook.com/CatolicaDeQuixada"
+							title="ScrumBR no Facebook" target="_blank" rel="nofollow"><p:graphicImage
+									library="social" name="facebook.png"></p:graphicImage></a></li>
+						<li><a href="http://twitter.com/CatolicaQuixada"
+							title="ScrumBR no Twitter" target="_blank" rel="nofollow"><p:graphicImage
+									library="social" name="twitter.png"></p:graphicImage></a></li>
+						<li><a
+							href="http://youtube.com/user/catolicaquixada/featured"
+							title="ScrumBR no YouTube" target="_blank" rel="nofollow"><p:graphicImage
+									library="social" name="youtube.png"></p:graphicImage></a></li>
+						<li><a href="http://www.fcrs.edu.br/" title="ScrumBR "
+							target="_blank" rel="nofollow"><p:graphicImage
+									library="social" name="gmail.png"></p:graphicImage></a></li>
+					</ul>
+					<br></br> <span>© ScrumBR - Todos os direitos reservados.</span>
+				</div>
+			</div>
+		</ui:insert> </footer>
+	</div>
+
+</h:body>
+</html>

@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	template="/template/padrao_administracao.xhtml">
+
+	<ui:define name="cabecalho">
+		<h:form id="FormularioTopo">
+
+			<div class="links_funcionais">
+
+				<div class="titulo_links_funcionais">
+					<div class="titulo_links_funcionais_imagem">
+						<h:graphicImage library="img" name="cadeado.png" />
+					</div>
+					<h1>
+
+						<h:outputText value="Alterar Senha" />
+
+					</h1>
+					<h2>
+						<h:outputText
+							value="Informe os campos obrigatórios para alterar a senha!" />
+
+					</h2>
+				</div>
+
+			</div>
+
+		</h:form>
+	</ui:define>
+	<ui:define name="body">
+
+		<h:form id="Formulario">
+
+			<p:panel style="background-color: #EEE7D8;">
+				<h:outputLabel value="(" styleClass="myLabel" />
+				<h:outputLabel value="*" styleClass="campoObrigatorio" />
+				<h:outputLabel value=") " styleClass="myLabel" />
+				<h:outputLabel value="Campo obrigatório." />
+
+			</p:panel>
+			<br />
+			<p:panel id="pnl">
+				<f:facet name="header">
+					<h:outputLabel
+						value="Alterar Senha - #{escopoSessaoBean.usuarioLogado.nome}"
+						styleClass="labelHeader" />
+				</f:facet>
+
+				<br />
+
+				<h:panelGroup
+					rendered="#{escopoSessaoBean.usuarioLogado.id !=  null}">
+					<h:outputText for="pwd1" value="Senha " styleClass="myLabel" />
+					<h:outputText value=" * " styleClass="campoObrigatorio" />
+					<br />
+					<p:password id="pwd1"
+						value="#{escopoSessaoBean.usuarioLogado.senha}" match="pwd2"
+						label="Senha" required="true" size="40"
+						validatorMessage="As senhas informadas são diferentes ou não atendem ao padrão de senhas que deve conter no mínimo 6 e no máximo 20 dígitos!"
+						feedback="true" promptLabel="Digite sua senha!"
+						weakLabel="Senha fraca" goodLabel="Senha média"
+						strongLabel="Senha forte"
+						requiredMessage="Campo 'Senha' é obrigatório!">
+						<!-- 						<f:validateRegex -->
+						<!-- 							pattern="((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{6,20})" /> -->
+					</p:password>
+					<br />
+					<br />
+					<h:outputText for="pwd2" value="Confirmar senha "
+						styleClass="myLabel" />
+					<h:outputText value=" * " styleClass="campoObrigatorio" />
+					<br />
+					<p:password id="pwd2"
+						value="#{escopoSessaoBean.usuarioLogado.senha}"
+						label="Confirmar senha" required="true" size="40"
+						requiredMessage="Campo 'Confirmar senha' é obrigatório!" />
+				</h:panelGroup>
+				<br />
+				<br />
+			</p:panel>
+
+			<br />
+
+
+			<p:commandButton value="Atualizar" icon="ui-icon-disk"
+				styleClass="btn-blue" action="#{usuarioBean.updateSenha}"
+				update="pnl"
+				rendered="#{escopoSessaoBean.usuarioLogado.id != null}">
+				<f:setPropertyActionListener
+					value="#{escopoSessaoBean.usuarioLogado}"
+					target="#{usuarioBean.usuario}" />
+			</p:commandButton>
+
+			<p:spacer width="20" height="0" />
+
+			<p:button icon="ui-icon-close" value="Cancelar" rendered="#{escopoSessaoBean.usuarioLogado.primeiroAcesso == false}"
+				outcome="/pages/private/inicio.xhtml" styleClass="btn-orange" />
+
+		</h:form>
+
+		<p:dialog width="50%" height="50%" resizable="false" draggable="false"
+			modal="true"
+			visible="#{escopoSessaoBean.usuarioLogado.primeiroAcesso == true}"
+			widgetVar="dlg">
+			<f:facet name="header">
+				<h:outputText value="#{escopoSessaoBean.usuarioLogado.nome}"
+					styleClass="labelHeader" />
+			</f:facet>
+			<br />
+			<center>
+				<h:panelGrid columns="2">
+					<p:graphicImage library="img" name="security.png" width="120"
+						height="120" />
+					<h:outputLabel value="Bem-vindo ao ScrumBR" styleClass="labelHeader" />
+				</h:panelGrid>
+			</center>
+			<br />
+			<h:outputLabel	value="Antes de continuar, é necessário que sua senha seja alterada!"
+				 />
+			<br />
+			<br />
+
+			<p:separator />
+
+			<br />
+
+			<p:commandButton process="@this" immediate="true" value="Fechar"
+				oncomplete="PF('dlg').hide();" styleClass="btn-blue" />
+
+			<br />
+			<br />
+
+
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

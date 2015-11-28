@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/padrao_administracao.xhtml">
+
+	<ui:define name="menu" />
+
+	<ui:define name="body">
+		<div id="central" align="center">
+			<h:form>
+				<!-- <p:panel header="Login" style="width:50%">
+					<h:panelGrid columns="5">
+						<p:graphicImage url="/template/imagens/scrumbrLogin2.png"
+							style="width: 300px; border-radius:200px" />
+						<p:spacer width="10px" />
+						<hr style="width: 5px; height: 200px; text-align: center" />
+						<p:spacer width="10px" />
+						<h:panelGroup>
+							<h:panelGrid columns="1">
+								<p:outputLabel value="Organização:  " />
+								<p:inputText value="#{loginBean.empresa}" size="25" />
+								<p:outputLabel value="Login:  " />
+								<p:inputText value="#{loginBean.login}" size="25" />
+								<p:outputLabel value="Senha: " />
+								<p:password size="25" maxlength="25" id="senha"
+									value="#{loginBean.senha}"
+									validatorMessage="Sua senha deve ser composta por no mínimo 6 caracteres!">
+								</p:password>
+								<br />
+																<hr style="width: 200px; height: 5px" />
+							</h:panelGrid>
+							<p:commandButton id="btnLogin" value="ACESSAR"
+								action="#{loginBean.loginSistema}" ajax="false" />
+							<p:spacer height="40" />
+						</h:panelGroup>
+					</h:panelGrid>
+				</p:panel> -->
+				<p:panel style="width:30%; backgroud:white" header="Login ScrumBR" styleClass="animated zoomIn">
+					<h:panelGrid columns="1">
+						<h:panelGroup>
+							<center>
+								<p:graphicImage url="/template/imagens/scrumbrLogin2.png"
+									style="width: 150px; border-radius:200px;" />
+							</center>
+						</h:panelGroup>
+						<h:panelGrid columns="1">
+							<p:outputLabel value="Organização:  " />
+							<p:inputText value="#{loginBean.empresa}" size="25" id="textoEmpresa" />
+							<p:outputLabel value="Login:  " />
+							<p:inputText value="#{loginBean.login}" size="25" id="textoLogin" />
+							<p:outputLabel value="Senha: " />
+							<p:password size="25" maxlength="25" id="senha"
+								value="#{loginBean.senha}"
+								validatorMessage="Sua senha deve ser composta por no mínimo 6 caracteres!" >
+							</p:password>
+							<p:watermark value="Ex:. mnsoft" for="textoEmpresa"></p:watermark>
+							<p:watermark value="Ex:. andrey" for="textoLogin"></p:watermark>
+							<p:watermark value="Senha" for="senha"></p:watermark>
+							<p:commandButton id="btnLogin" value="ACESSAR" icon="fa fa-unlock-alt"
+								action="#{loginBean.loginSistema}" ajax="false" style="width:100%"/>
+							<p:spacer height="5" />
+						</h:panelGrid>
+					</h:panelGrid>
+				</p:panel>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

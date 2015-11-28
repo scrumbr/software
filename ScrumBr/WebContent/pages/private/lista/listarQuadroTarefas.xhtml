@@ -1,0 +1,308 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/padrao_administracao.xhtml">
+
+<ui:define name="cabecalho">
+		<h:form id="FormularioTopo">
+
+			<div class="links_funcionais">
+				<div class="titulo_links_funcionais">
+					<div class="titulo_links_funcionais_imagem">
+						<h:graphicImage library="cabecalho" name="icones-task-board.png" />
+					</div>
+					<h1>
+						<h:outputText value="Quadro de Tarefas"/>
+					</h1>
+					<h2>
+						<h:outputText value="Selecione a sprint monitore todas as suas tarefas."/>
+					</h2>
+				</div>
+
+				<div class="menu_links_funcionais">
+					<h:commandLink id="lnkHome" action="/pages/private/inicio.xhtml"
+						immediate="true" title="Voltar para página inicial">
+						<div class="menu_links_funcionais_home"></div>
+						<h:outputText value="Home" />
+					</h:commandLink>
+
+				</div>
+
+				<div style="clear: both" />
+
+			</div>
+
+		</h:form>
+	</ui:define>
+	<ui:define name="body">
+
+		<t:saveState value="#{projetoBean.projeto}" />
+		<t:saveState value="#{projetoBean.lazy}" />
+		<t:saveState value="#{tarefaBean.tarefa}" />
+		<t:saveState value="#{tarefaBean.tarefasAfazer}" />
+		<t:saveState value="#{tarefaBean.tarefasAndamento}" />
+		<t:saveState value="#{tarefaBean.tarefasConcluida}" />
+		<t:saveState value="#{tarefaBean.sprintFilter}" />
+		<t:saveState value="#{sprintBean.listSprints}" />
+		<t:saveState value="#{sprintBean.sprint}" />
+
+
+		<h:form id="formulario">
+
+			<p:panel header="Selecionar a Sprint para gerar o Quadro de tarefas"
+				toggleable="true">
+
+				<h:panelGrid columns="10">
+					<p:selectOneMenu style="width:450px"
+						value="#{tarefaBean.sprintFilter}" converter="genericConverter">
+						<f:selectItem itemLabel="Selecione a Sprint" />
+						<f:selectItems value="#{sprintBean.listSprints}" var="sprint"
+							itemLabel="#{sprint.nome}" itemValue="#{sprint}" />
+
+						<p:ajax listener="#{tarefaBean.listandoTarefas()}"
+							update="afazer andamento concluida qtd" />
+					</p:selectOneMenu>
+					
+					<div align="right">
+					<h:outputText value="Tarefas concluidas: #{tarefaBean.qtdConcluida} de #{tarefaBean.qtdAfazer}" id="qtd"/>
+					</div>
+
+				</h:panelGrid>
+			</p:panel>
+
+			<br />
+			<h:panelGroup id="grid">
+			<h:panelGrid columns="4" style="width:100%; height:100%;">
+				<p:dataGrid var="entity" value="#{tarefaBean.tarefasAfazer}"
+					columns="2" layout="grid" rows="8" paginator="true" id="afazer"
+					currentPageReportTemplate="{currentPage} de {totalPages}"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					paginatorPosition="bottom" emptyMessage="Nenhuma tarefa à fazer">
+					<f:facet name="header">
+						<h:outputText value="À fazer" styleClass="labelHeader" />
+					</f:facet>
+					<p:panel style="text-align:center">
+						<f:facet name="header">
+							<h:outputText id="title" value="#{entity.nomeAux}" />
+							<p:tooltip for="title" value="#{entity.nome}" />
+						</f:facet>
+						<h:outputText id="nome" styleClass="labelTarefaNegrito"
+							style="text-align:center" value="#{entity.usuario.nomeAux}" />
+						<p:tooltip styleClass="labelTarefaNegrito"
+							style="text-align:center" for="nome"
+							value="#{entity.usuario.nome}" />
+
+						<h:panelGrid columns="2" style="width:100%; text-align:left;">
+							<h:outputText value="Tempo:" styleClass="labelTarefaNegrito" />
+							<h:outputText value="#{entity.tempoAtividade}"
+								styleClass="labelTarefa">
+							</h:outputText>
+							<h:outputText value="Dificuldade:"
+								styleClass="labelTarefaNegrito" />
+							<h:outputText value="#{entity.dificuldadeTarefa.descricao}"
+								styleClass="labelTarefa" />
+						</h:panelGrid>
+						<f:facet name="actions">
+							<p:commandLink oncomplete="PF('dlgTarefa').show()"
+								title="Editar tarefa"
+								styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"
+								update=":formulario2" immediate="true" process="@this"
+							 >
+								<h:outputText styleClass="ui-icon ui-icon-pencil" />
+								<f:setPropertyActionListener target="#{tarefaBean.tarefa}"
+									value="#{entity}" />
+							</p:commandLink>
+							<h:commandLink
+								styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default">
+								<h:outputText styleClass="ui-icon ui-icon-star" />
+							</h:commandLink>
+						</f:facet>
+					</p:panel>
+				</p:dataGrid>
+				<p:dataGrid var="entity" value="#{tarefaBean.tarefasAndamento}"
+					columns="2" layout="grid" rows="8" paginator="true" id="andamento"
+					currentPageReportTemplate="{currentPage} de {totalPages}"
+					emptyMessage="Nenhuma tarefa em andamento"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					paginatorPosition="bottom">
+
+					<f:facet name="header">
+						<h:outputText value="Andamento" styleClass="labelHeader" />
+					</f:facet>
+					<p:panel style="text-align:center">
+						<f:facet name="header">
+							<h:outputText id="title2" value="#{entity.nomeAux}" />
+							<p:tooltip for="title2" value="#{entity.nome}" />
+						</f:facet>
+						<h:outputText id="nome" styleClass="labelTarefaNegrito"
+							style="text-align:center" value="#{entity.usuario.nomeAux}" />
+						<p:tooltip styleClass="labelTarefaNegrito"
+							style="text-align:center" for="nome"
+							value="#{entity.usuario.nome}" />
+						<h:panelGrid columns="2" style="width:100%; text-align:left;">
+							<h:outputText value="Tempo:" styleClass="labelTarefaNegrito" />
+							<h:outputText value="#{entity.tempoAtividade}"
+								styleClass="labelTarefa">
+							</h:outputText>
+							<h:outputText value="Dificuldade:"
+								styleClass="labelTarefaNegrito" />
+							<h:outputText value="#{entity.dificuldadeTarefa.descricao}"
+								styleClass="labelTarefa" />
+						</h:panelGrid>
+						<f:facet name="actions">
+							<p:commandLink oncomplete="PF('dlgTarefa').show()"
+								title="Editar tarefa"
+								styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"
+								update=":formulario2:dlgTarefa">
+								<h:outputText styleClass="ui-icon ui-icon-pencil" />
+								<f:setPropertyActionListener target="#{tarefaBean.tarefa}"
+									value="#{entity}" />
+							</p:commandLink>
+							<h:commandLink
+								styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default">
+								<h:outputText styleClass="ui-icon ui-icon-star" />
+							</h:commandLink>
+						</f:facet>
+					</p:panel>
+				</p:dataGrid>
+				<p:dataGrid var="entity" value="#{tarefaBean.tarefasConcluida}"
+					columns="2" layout="grid" rows="8" paginator="true" id="concluida"
+					emptyMessage="Nenhuma tarefa concluída"
+					currentPageReportTemplate="{currentPage} de {totalPages}"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					paginatorPosition="bottom">
+
+					<f:facet name="header">
+						<h:outputText value="Concluída" styleClass="labelHeader" />
+					</f:facet>
+					<p:panel style="text-align:center">
+						<f:facet name="header">
+							<h:outputText id="title3" value="#{entity.nomeAux}" />
+							<p:tooltip for="title3" value="#{entity.nome}" />
+						</f:facet>
+						<h:outputText id="nome" styleClass="labelTarefaNegrito"
+							style="text-align:center" value="#{entity.usuario.nomeAux}" />
+						<p:tooltip styleClass="labelTarefaNegrito"
+							style="text-align:center" for="nome"
+							value="#{entity.usuario.nome}" />
+						<h:panelGrid columns="2" style="width:100%; text-align:left;">
+							<h:outputText value="Tempo:" styleClass="labelTarefaNegrito" />
+							<h:outputText value="#{entity.tempoAtividade}"
+								styleClass="labelTarefa">
+							</h:outputText>
+							<h:outputText value="Dificuldade:"
+								styleClass="labelTarefaNegrito" />
+							<h:outputText value="#{entity.dificuldadeTarefa.descricao}"
+								styleClass="labelTarefa" />
+						</h:panelGrid>
+						<f:facet name="actions">
+							<p:commandLink oncomplete="PF('dlgTarefa').show()"
+								title="Editar tarefa"
+								styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"
+								update=":formulario2:dlgTarefa">
+								<h:outputText styleClass="ui-icon ui-icon-pencil" />
+								<f:setPropertyActionListener target="#{tarefaBean.tarefa}"
+									value="#{entity}" />
+							</p:commandLink>
+							<p:commandLink
+								oncomplete="PF('tarefaPanel').show('#{component.clientId}')"
+								styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default">
+								<h:outputText styleClass="ui-icon ui-icon-star" />
+								<f:setPropertyActionListener target="#{tarefaBean.tarefa}"
+									value="#{entity}" />
+							</p:commandLink>
+						</f:facet>
+					</p:panel>
+				</p:dataGrid>
+			</h:panelGrid>
+			</h:panelGroup>
+			<br />
+
+
+		</h:form>
+
+
+
+		<h:form id="formulario2">
+			<p:dialog modal="true" id="dlgTarefa" widgetVar="dlgTarefa"
+				header="Editar tarefa" width="60%">
+				<h:panelGrid columns="1">
+					<h:panelGroup>
+						<p:outputLabel value="Nome:" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputText value="#{tarefaBean.tarefa.nome}" required="true"
+							requiredMessage="Campo 'NOME' obrigatório" size="40" />
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:outputLabel value="Responsável:" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:selectOneMenu id="responsavel"
+							value="#{tarefaBean.tarefa.usuario}" size="30"
+							converterMessage="Não foi possível selecionar o Responsável da tarefa(Erro ao converter o objeto)"
+							converter="genericConverter">
+							<f:selectItem itemLabel="Selecione o responsável" />
+							<f:selectItems value="#{usuarioBean.usuarios}" var="user"
+								itemLabel="#{user.nome}" itemValue="#{user}" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:outputLabel value="Status da tarefa:" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:selectOneRadio id="statusTarefa"
+							value="#{tarefaBean.tarefa.statusTarefa}" size="30">
+							<f:selectItems value="#{tarefaBean.statusTarefas}" var="tarefa"
+								itemLabel="#{tarefa.descricao}" itemValue="#{tarefa}" />
+							<p:ajax update=":formulario2:data" />
+						</p:selectOneRadio>
+						<h:panelGrid id="data">
+							<h:panelGroup
+								rendered="#{tarefaBean.tarefa.statusTarefa eq 'CONCLUIDA'}">
+								<p:outputLabel value="Data de Conclusão:" />
+								<h:outputText value=" * " styleClass="campoObrigatorio" />
+								<br />
+								<p:calendar pattern="dd/MM/yyyy"
+									value="#{tarefaBean.tarefa.dataConclusao}">
+
+								</p:calendar>
+							</h:panelGroup>
+						</h:panelGrid>
+					</h:panelGroup>
+				</h:panelGrid>
+				<hr />
+				<p:commandButton value="Atualizar" action="#{tarefaBean.update}"
+					 rendered="#{tarefaBean.tarefa.id != null}" icon="fa fa-edit"
+					 oncomplete="PF('dlgTarefa').hide()"
+					update=":formulario:grid" />
+
+			</p:dialog>
+
+			<p:overlayPanel widgetVar="tarefaPanel" showEffect="fade"
+				hideEffect="fade" dismissable="false" showCloseIcon="true">
+				<p:outputPanel id="tarefaDetail" style="text-align:center;">
+					<h:outputText value="#{tarefaBeaan.taarefa.usuario.nome}"
+						styleClass="labelTarefaNegrito" style="text-align:center" />
+					<h:panelGrid columns="2" style="width:100%; text-align:left;">
+						<h:outputText value="Tempo:" styleClass="labelTarefaNegrito" />
+						<h:outputText value="#{tarefaBeaan.taarefa.tempoAtividade}"
+							styleClass="labelTarefa">
+						</h:outputText>
+						<h:outputText value="Dificuldade:" styleClass="labelTarefaNegrito" />
+						<h:outputText
+							value="#{tarefaBeaan.taarefa.dificuldadeTarefa.descricao}"
+							styleClass="labelTarefa" />
+					</h:panelGrid>
+				</p:outputPanel>
+			</p:overlayPanel>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

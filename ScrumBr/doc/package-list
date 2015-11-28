@@ -1,0 +1,10 @@
+br.web.scrumbr.acesso
+br.web.scrumbr.bean
+br.web.scrumbr.bo
+br.web.scrumbr.constants
+br.web.scrumbr.converter
+br.web.scrumbr.dao
+br.web.scrumbr.entity
+br.web.scrumbr.exceptions
+br.web.scrumbr.report
+br.web.scrumbr.util

@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/padrao_administracao.xhtml">
+
+
+	<ui:define name="body">
+
+		<t:saveState value="#{usuarioBean.usuario}" />
+		<t:saveState value="#{usuarioBean.lazy}" />
+
+		<h:form id="formulario">
+
+			<br />
+			<p:panel header="Preencha os campos para realizar seu cadastro">
+				<h:panelGrid columns="1">
+					<h:panelGroup>
+						<p:outputLabel value="Nome:" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputText value="#{escopoSessaoBean.usuarioLogado.nome}"
+							required="true" requiredMessage="Campo 'NOME' obrigatório"
+							size="40" />
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:outputLabel value="Sobrenome:" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputText value="#{escopoSessaoBean.usuarioLogado.sobrenome}"
+							required="true" requiredMessage="Campo 'SOBRENOME' obrigatório"
+							size="40" />
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:outputLabel value="Email:" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputText value="#{escopoSessaoBean.usuarioLogado.email}"
+							required="true" requiredMessage="Campo 'E-mail' é obrigatório!"
+							size="40"
+							validatorMessage="O e-mail informado não é um e-mail válido!">
+							<f:validateRegex
+								pattern="(^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$)" />
+						</p:inputText>
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:outputLabel value="Cpf:" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputMask mask="999.999.999-99"
+							value="#{escopoSessaoBean.usuarioLogado.cpf}" required="true"
+							requiredMessage="Campo 'Cpf' é obrigatório!" size="40">
+						</p:inputMask>
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:outputLabel value="Celular:" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputMask mask="(999)99999-9999"
+							value="#{escopoSessaoBean.usuarioLogado.celular}" required="true"
+							requiredMessage="Campo 'Celular' é obrigatório!" size="40">
+						</p:inputMask>
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:outputLabel value="Login:" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputText value="#{escopoSessaoBean.usuarioLogado.login}"
+							required="true" requiredMessage="Campo 'Login' obrigatório"
+							size="40" />
+					</h:panelGroup>
+				</h:panelGrid>
+				<h:panelGroup>
+					<p:outputLabel value="Perfil: " styleClass="myLabel" />
+					<p:selectOneRadio
+						value="#{escopoSessaoBean.usuarioLogado.perfilUser}">
+						<f:selectItems var="perfil" itemLabel="#{perfil.descricao}"
+							itemValue="#{perfil}" value="#{usuarioBean.perfis}" />
+					</p:selectOneRadio>
+				</h:panelGroup>
+				<h:panelGroup>
+					<p:outputLabel value="Foto: " styleClass="myLabel" />
+					<p:fileUpload fileUploadListener="#{usuarioBean.enviarImagem}"
+						mode="advanced" dragDropSupport="false"
+						allowTypes="/(\.|\/)(gif|jpe?g|png)$/" label="Selecionar"
+						uploadLabel="Enviar" required="true"
+						requiredMessage="O campo 'Foto' é obrigatório" />
+				</h:panelGroup>
+			</p:panel>
+			<p:panel>
+				<p:commandButton value="Atualizar"  icon="fa fa-save"
+					styleClass="btn-green" action="#{usuarioBean.updateSenha}"
+					rendered="#{escopoSessaoBean.usuarioLogado.id != null}">
+					<f:setPropertyActionListener
+						value="#{escopoSessaoBean.usuarioLogado}"
+						target="#{usuarioBean.usuario}" />
+				</p:commandButton>
+
+				<p:commandButton value="Cancelar" styleClass="btn-green"
+					icon="fa fa-ban" action="/pages/private/cadastro/index.xhtml"
+					ajax="false" immediate="true"
+					rendered="#{usuarioBean.usuario.id == null}" />
+
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

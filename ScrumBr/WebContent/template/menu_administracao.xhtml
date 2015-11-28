@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+
+	<t:saveState value="#{projetoBean.projeto}" />
+	<t:saveState value="#{projetoBean.projetos}" />
+
+	<h:form id="menuform">
+		<p:panel id="menuBar1">
+		<div align="right">
+					<h:panelGrid columns="15">
+						<p:graphicImage value="#{usuarioBean.image}" width="38"
+							height="38" cache="false" styleClass="classRedonda">
+							<f:param name="img" value="#{escopoSessaoBean.usuarioLogado.id}" />
+						</p:graphicImage>
+							<p:outputLabel
+								value="#{escopoSessaoBean.usuarioLogado.perfilUser.descricao}: #{escopoSessaoBean.usuarioLogado.nome}" />
+							<p:selectOneMenu id="combo" value="#{projetoBean.projetoMenu}"
+								style="width:250px"
+								converterMessage="Não foi possível selecionar o Coordenador de curso (Erro ao converter o objeto)"
+								converter="genericConverter">
+								<f:selectItem itemLabel="Selecione o projeto" />
+								<f:selectItems value="#{projetoBean.projetosMenu}" var="projeto"
+									itemLabel="#{projeto.nome}" itemValue="#{projeto}" />
+
+								<p:ajax listener="#{projetoBean.setarProjetoSessao()}"
+									update="menuBar @all" />
+							</p:selectOneMenu>
+				
+						<p:outputLabel value="Tempo de sessão:" />
+						<p:tooltip for="tempo-sessao"
+						value="Tempo restante até a sessão expirar" />
+
+					<pe:timer timeout="2400" format="mm:ss" id="tempo-sessao"
+						listener="#{loginRequest.logout}" widgetVar="timer" />
+						<h:panelGroup>
+							<p:commandLink action="/pages/private/cadastro/mudarSenha.xhtml"
+								ajax="false">
+								<p:graphicImage width="32" height="32" styleClass="icon"
+									id="key" library="img" name="key.png" />
+								<p:tooltip for="key" value="Alterar minha senha" />
+							</p:commandLink>
+						</h:panelGroup>
+						<h:panelGroup>
+							<p:commandLink
+								action="/pages/private/cadastro/alterarMeusDados.xhtml">
+								<p:graphicImage width="32" height="32" styleClass="icon"
+									id="dados" library="img" name="user (2).png" />
+								<p:tooltip for="dados" value="Alterar meus dados" />
+							</p:commandLink>
+						</h:panelGroup>
+						<h:panelGroup>
+							<p:commandLink action="#{loginBean.logout}" ajax="false">
+								<p:graphicImage width="32" height="32" styleClass="icon"
+									id="sair" library="img" name="sair.png" />
+								<p:tooltip for="sair" value="Sair do sistema" />
+							</p:commandLink>
+						</h:panelGroup>
+							</h:panelGrid>
+				</div>
+		</p:panel>
+		<p:menubar id="menuBar"
+			rendered="#{projetoSessaoBean.projetoSelecionado != null}">
+			<p:submenu label="Sistema" icon=" fa fa-navicon">
+				<p:menuitem value="Página inicial" icon="fa fa-home"
+					outcome="/pages/private/inicio.xhtml" />
+				<p:menuitem value="Sair" icon="fa fa-power-off" />
+			</p:submenu>
+			<p:submenu label="Product Backlog" icon="fa fa-list">
+				<p:menuitem value="Cadastrar Atividade" icon="fa fa-file-text-o"
+					outcome="/pages/private/cadastro/cadastrarProductBacklog.xhtml" />
+				<p:menuitem value="Lista de Atividades" icon="fa fa-list-alt"
+					outcome="/pages/private/lista/listarProductBacklog.xhtml" />
+			</p:submenu>
+			<p:submenu label="Sprints" icon="fa fa-retweet">
+				<p:menuitem value="Criar Sprint" icon="fa fa-rotate-left"
+					outcome="/pages/private/cadastro/cadastrarSprint.xhtml" />
+				<p:menuitem value="Lista Sprints" icon="fa fa-random"
+					outcome="/pages/private/lista/listarSprint.xhtml" />
+			</p:submenu>
+			<p:menuitem value="Burndown Chart" icon="fa fa-line-chart"
+				outcome="/pages/private/lista/listarBurndownChart.xhtml" />
+			<p:menuitem value="Quadro de tarefas" icon="fa fa-table"
+				outcome="/pages/private/lista/listarQuadroTarefas.xhtml" />
+			<p:submenu label="Participantes" icon="fa fa-user">
+				<p:menuitem value="Cadastrar" icon="fa fa-child"
+					outcome="/pages/private/cadastro/cadastrarParticipante.xhtml" />
+				<p:menuitem value="Listar" icon="fa fa-database"
+					outcome="/pages/private/lista/listarParticipante.xhtml" />
+			</p:submenu>
+			<p:submenu label="Projeto" icon="fa fa-clipboard">
+				<p:menuitem value="Cadastrar" icon="fa fa-file-o"
+					outcome="/pages/private/cadastro/cadastrarProjeto.xhtml" />
+				<p:menuitem value="Listar" icon="fa fa-copy"
+					outcome="/pages/private/lista/listarProjeto.xhtml" />
+			</p:submenu>
+			<p:submenu label="Reunião Diária" icon="fa fa-users">
+				<p:menuitem value="Registrar" icon="fa fa-weixin"
+					outcome="/pages/private/cadastro/cadastrarReuniaoEmPe.xhtml" />
+				<p:menuitem value="Listar" icon="fa fa-twitch"
+					outcome="/pages/private/lista/listarReuniaoEmPe.xhtml" />
+			</p:submenu>
+				<p:menuitem value="Histórico alterações de tarefas" icon="fa fa-list"
+				outcome="/pages/private/lista/historicoTarefa.xhtml" />
+
+		</p:menubar>
+
+	</h:form>
+</h:body>
+
+</html>

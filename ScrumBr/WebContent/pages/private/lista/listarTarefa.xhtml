@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/padrao_administracao.xhtml">
+
+
+	<ui:define name="body">
+
+		<t:saveState value="#{tarefaBean.tarefa}" />
+		<t:saveState value="#{tarefaBean.lazy}" />
+
+		<h:form id="formulario">
+
+			<p:panel header="Campos de pesquisa" toggleable="true">
+
+				<h:panelGrid columns="10">
+
+					<h:outputText value="Nome: " styleClass="myLabel" />
+					<p:inputText value="#{tarefaBean.tarefaFilter.nome}" maxlength="20"
+						size="40">
+					</p:inputText>
+
+					<p:commandButton value="Buscar" icon="ui-icon-search"
+						styleClass="btn-blue" action="#{tarefaBean.list()}"
+						update=":formulario:tabelaTarefa" />
+
+				</h:panelGrid>
+			</p:panel>
+
+			<br />
+
+			<p:dataTable id="tabelaTarefa" value="#{tarefaBean.lazy}" lazy="true"
+				var="entity" paginator="true" rows="10"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{currentPage} de {totalPages}"
+				paginatorPosition="bottom" rowIndexVar="row"
+				emptyMessage="Nenhum registro encontrado." filterEvent="enter"
+				widgetVar="dadosTabela">
+
+				<p:column headerText="Status" width="40">
+					<p:commandLink action="#{tarefaBean.updateStatus}"
+						update="tabelaTarefa">
+						<h:panelGroup rendered="#{entity.status}">
+							<div class="icones_ativado" />
+						</h:panelGroup>
+
+						<h:panelGroup rendered="#{entity.status == false}">
+							<div class="icones_inativado" />
+						</h:panelGroup>
+
+						<f:setPropertyActionListener target="#{tarefaBean.tarefa}"
+							value="#{entity}" />
+					</p:commandLink>
+				</p:column>
+
+				<p:column id="nome" headerText="Nome" width="150">
+					<h:outputText value="#{entity.nome}" />
+				</p:column>
+
+				<p:column id="status" headerText="Status" width="150">
+					<h:outputText value="#{entity.statusTarefa.descricao}" />
+				</p:column>
+
+				<p:column headerText="Editar" width="40">
+					<p:commandLink id="lnkEditar" action="#{tarefaBean.prepareUpdate}"
+						immediate="true" ajax="false" title="Editar"
+						rendered="#{entity.status}">
+						<div class="icones_editar"></div>
+						<f:setPropertyActionListener target="#{tarefaBean.tarefa}"
+							value="#{entity}" />
+					</p:commandLink>
+					<p:outputLabel rendered="#{!entity.status}"
+						title="Editar desabilitado">
+						<div class="icones_editar_inativo"></div>
+					</p:outputLabel>
+				</p:column>
+			</p:dataTable>
+
+
+			<br />
+			<p:panel>
+
+				<h:panelGrid columns="10">
+					<h:panelGroup>
+						<p:graphicImage>
+							<div class="icones_ativado" />
+						</p:graphicImage>
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<p:outputLabel value="Participante ativo" />
+						<p:spacer width="5"></p:spacer>
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<p:graphicImage>
+							<div class="icones_inativado" />
+						</p:graphicImage>
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<p:outputLabel value="Participante inativo" />
+						<p:spacer width="5"></p:spacer>
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:graphicImage>
+							<div class="icones_editar" />
+							<p:spacer width="5"></p:spacer>
+						</p:graphicImage>
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<p:outputLabel value="Editar dados do evento cadastrado." />
+						<p:spacer width="5"></p:spacer>
+					</h:panelGroup>
+
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

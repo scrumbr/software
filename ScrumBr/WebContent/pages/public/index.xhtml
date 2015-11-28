@@ -1,0 +1,269 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/padrao_administracao.xhtml">
+
+	<ui:define name="menu"></ui:define>
+	<ui:define name="body">
+
+		<div id="central" align="center">
+
+			<div class="padding">
+				<div style="clear: both" />
+				<h:form id="formInicio">
+					<p:galleria panelWidth="1000" panelHeight="370" showCaption="false">
+						<p:graphicImage library="banner" name="1.jpg" />
+						<p:graphicImage library="banner" name="2.jpg" />
+						<p:graphicImage library="banner" name="3.jpg" />
+					</p:galleria>
+					<br />
+					<h:panelGrid columns="4"
+						columnClasses="colunaInicio, colunaInicio, colunaInicio, colunaInicio"
+						style="width:100%">
+						<p:panel style="height:290px">
+							<center>
+								<p:graphicImage styleClass="centralizado" width="80" height="80"
+									library="ppoe" name="scrum-br-plan.png" />
+								<br />
+								<p:outputLabel value="Planejamento"
+									styleClass="informacao-inicio" />
+								<br /> <br />
+								<p:outputLabel
+									value="Acompanhamento constante de todo o processo de desenvolvimento. Diminui o número de erros. Entregas rápidas e metodologia adaptável." />
+								<br />
+							</center>
+						</p:panel>
+						<p:panel style="height:290px">
+							<center>
+								<p:graphicImage styleClass="centralizado" width="80" height="80"
+									library="ppoe" name="scrum-br-prod.png" />
+								<br />
+								<p:outputLabel value="Produtividade"
+									styleClass="informacao-inicio" />
+								<br /> <br />
+								<p:outputLabel
+									value="Cadastro de projetos, sprints, backlogs e tarefas, com acesso para alterações e conclusões e possibilidade de incluir comentários. Tudo isso em uma visualização simples e eficiente." />
+							</center>
+						</p:panel>
+						<p:panel style="height:290px">
+							<center>
+								<p:graphicImage styleClass="centralizado" width="80" height="80"
+									library="ppoe" name="scrum-br-org.png" />
+								<br />
+								<p:outputLabel value="Organização"
+									styleClass="informacao-inicio" />
+								<br /> <br />
+							</center>
+						</p:panel>
+						<p:panel style="height:290px">
+							<center>
+								<p:graphicImage styleClass="centralizado" width="80" height="80"
+									library="ppoe" name="scrum-br-exc.png" />
+								<br />
+								<p:outputLabel value="Excelência" styleClass="informacao-inicio" />
+								<br /> <br />
+							</center>
+						</p:panel>
+					</h:panelGrid>
+
+					<!-- 					|||||||||||| METODOLOGIA||||||||||||||||| -->
+
+					<br />
+					<div class="ui-grid-row">
+						<div class="ui-grid-col-12">
+							<h1>
+								<h:outputText value="Método Ágil Scrum" />
+							</h1>
+
+						</div>
+					</div>
+					<br />
+					<br />
+					<h:panelGrid columns="2" style="width:100%">
+						<h:panelGroup>
+							<center>
+								<p:outputLabel value="O que é o Scrum?" style="font-size:28px" />
+							</center>
+						</h:panelGroup>
+
+						<h:panelGroup>
+							<center>
+								<p:outputLabel value="Como funciona o Scrum?"
+									style="font-size:28px" />
+							</center>
+						</h:panelGroup>
+					</h:panelGrid>
+					<p:spacer height="250" />
+					<div class="ui-grid-row">
+						<div class="ui-grid-col-12">
+							<h1>
+								<h:outputText value="Pápeis fundamentais do Scrum" />
+							</h1>
+
+						</div>
+					</div>
+					<br />
+					<br />
+					<h:panelGrid columns="3">
+						<h:panelGroup>
+							<div class="wrapper">
+								<p:graphicImage styleClass="myImg" library="papeis"
+									name="scrum-br-owner.png" />
+
+								<br /> <br /> <br />
+								<h:outputText value="Product Owner" styleClass="myLabel2" />
+
+								<div class="tooltip">
+									<p:link styleClass="myLabel3"
+										value="Descrição sobre o product Owner" />
+
+								</div>
+							</div>
+						</h:panelGroup>
+						<h:panelGroup>
+							<div>
+								<div class="wrapper">
+									<p:graphicImage styleClass="myImg" library="papeis"
+										name="scrum-br-master.png" />
+
+									<br /> <br /> <br />
+									<h:outputText value="Scrum Master" styleClass="myLabel2" />
+
+									<div class="tooltip">
+										<p:link styleClass="myLabel3"
+											value="Descrição sobre o Scrum Master" />
+
+									</div>
+								</div>
+
+							</div>
+						</h:panelGroup>
+						<h:panelGroup>
+							<div>
+								<div class="wrapper">
+									<p:graphicImage styleClass="myImg" library="papeis"
+										name="scrum-br-team.png" />
+									<br /> <br /> <br />
+									<h:outputText value="Scrum Team" styleClass="myLabel2" />
+
+									<div class="tooltip">
+										<p:link styleClass="myLabel3"
+											value="Descrição sobre o Team Scrum" />
+									</div>
+								</div>
+
+							</div>
+						</h:panelGroup>
+					</h:panelGrid>
+
+					<!-- 					||||||||||||||||||||||| PRINCIPAIS ARTEFATOS DO SCRUM ||||||||||||||||||||||||||||\\ -->
+					<br />
+					<div class="ui-grid-row">
+						<div class="ui-grid-col-12">
+							<h1>
+								<h:outputText value="Principais Artefatos do Scrum" />
+							</h1>
+
+						</div>
+					</div>
+					<br />
+					<br />
+					<h:panelGrid columns="5" style="text-align:center;">
+						<h:panelGroup>
+							<div>
+								<div class="wrapper">
+									<p:graphicImage styleClass="myImg" library="atividades"
+										name="scrum-br-prod-back.png" />
+
+									<br /> <br /> <br />
+									<h:outputText value="Product Backlog" styleClass="myLabel2" />
+
+									<div class="tooltip">
+										<p:link styleClass="myLabel3"
+											value="Descrição sobre o product backlog" />
+
+									</div>
+								</div>
+
+							</div>
+						</h:panelGroup>
+						<h:panelGroup>
+							<div>
+								<div class="wrapper">
+									<p:graphicImage styleClass="myImg" library="atividades"
+										name="scrum-br-sprint-back.png" />
+
+									<br /> <br /> <br />
+									<h:outputText value="Sprint Backlog" styleClass="myLabel2" />
+
+									<div class="tooltip">
+										<p:link styleClass="myLabel3"
+											value="Descrição sobre a Sprint Backlog" />
+
+									</div>
+								</div>
+
+							</div>
+						</h:panelGroup>
+						<h:panelGroup>
+							<div>
+								<div class="wrapper">
+									<p:graphicImage styleClass="myImg" library="atividades"
+										name="scrum-br-burndown-chart.png" />
+									<br /> <br /> <br />
+									<h:outputText value="Burndown Chart" styleClass="myLabel2" />
+
+									<div class="tooltip">
+										<p:link styleClass="myLabel3"
+											value="Descrição sobre o burndown chart" />
+									</div>
+								</div>
+
+							</div>
+						</h:panelGroup>
+						<h:panelGroup>
+							<div>
+								<div class="wrapper">
+									<p:graphicImage styleClass="myImg" library="atividades"
+										name="scrum-br-task-board.png" />
+									<br /> <br /> <br />
+									<h:outputText value="Quadro de tarefas" styleClass="myLabel2" />
+
+									<div class="tooltip">
+										<p:link styleClass="myLabel3"
+											value="Descrição sobre o quadro de tarefas" />
+									</div>
+								</div>
+
+							</div>
+						</h:panelGroup>
+						<h:panelGroup>
+							<div>
+								<div class="wrapper">
+									<p:graphicImage styleClass="myImg" library="atividades"
+										name="scrum-br-reuniao.png" />
+									<br /> <br /> <br />
+									<h:outputText value="Reúniao Diária" styleClass="myLabel2" />
+
+									<div class="tooltip">
+										<p:link styleClass="myLabel3"
+											value="Descrição sobre reunião diária" />
+									</div>
+								</div>
+
+							</div>
+						</h:panelGroup>
+					</h:panelGrid>
+				</h:form>
+
+			</div>
+		</div>
+
+	</ui:define>
+
+</ui:composition>

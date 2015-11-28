@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	template="/template/padrao_administracao.xhtml">
+
+	<ui:define name="menu" />
+
+	<ui:define name="body">
+
+		<t:saveState value="#{usuarioBean.usuario}" />
+		<t:saveState value="#{usuarioBean.usuarioFilter}" />
+		<t:saveState value="#{usuarioBean.lazy}" />
+
+		<h:form>
+			<p:panel >
+			<f:facet name="header">
+			<h:outputText value="Preencha os campos para realizar seu cadastro" styleClass="labelHeaderPanel" />
+			</f:facet>
+				<h:panelGrid columns="1">
+					<h:panelGroup>
+						<p:outputLabel value="Nome:" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputText value="#{usuarioBean.usuario.nome}" required="true"
+							requiredMessage="Campo 'NOME' obrigatório" size="40"/>
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:outputLabel value="Email:" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputText value="#{usuarioBean.usuario.email}" required="true"
+							requiredMessage="Campo 'E-mail' é obrigatório!" size="40"
+							validatorMessage="O e-mail informado não é um e-mail válido!">
+							<f:validateRegex
+								pattern="(^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$)" />
+						</p:inputText>
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:outputLabel value="Login:" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputText value="#{usuarioBean.usuario.login}" required="true"
+							requiredMessage="Campo 'Login' obrigatório" size="40"/>
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<h:outputText for="pwd1" value="Senha " styleClass="myLabel" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:password id="pwd1" value="#{usuarioBean.usuario.senha}"
+							match="pwd2" label="Senha" required="true" size="40"
+							validatorMessage="As senhas informadas são diferentes, digite novamente!"
+							feedback="true" promptLabel="Digite sua senha!"
+							weakLabel="Senha fraca" goodLabel="Senha média"
+							strongLabel="Senha forte" />
+						<br />
+						<h:outputText for="pwd2" value="Confirmar senha "
+							styleClass="myLabel" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:password id="pwd2" value="#{usuarioBean.usuario.senha}"
+							label="Confirmar senha" required="true" size="40" />
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<p:outputLabel value="Empresa:" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputText value="#{usuarioBean.usuario.empresa}" size="40"
+							required="true" requiredMessage="Campo obrogatório" />
+					</h:panelGroup>
+				</h:panelGrid>
+			</p:panel>
+			<br />
+			<p:panel>
+				<p:commandButton value="Cadastrar" action="#{usuarioBean.assinar}"
+					ajax="false" />
+				<p:commandButton value="Cancelar" action="/pages/public/index.xhtml"
+					ajax="false" immediate="true" />
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

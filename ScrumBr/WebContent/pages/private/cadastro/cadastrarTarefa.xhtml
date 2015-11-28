@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/padrao_administracao.xhtml">
+
+
+	<ui:define name="body">
+
+		<t:saveState value="#{tarefaBean.tarefa}" />
+		<t:saveState value="#{tarefaBean.lazy}" />
+		<t:saveState value="#{usuarioBean.usuario}"/>
+		<t:saveState value="#{usuarioBean.usuarios}"/>
+
+		<h:form id="formulario">
+
+			<br />
+			<p:panel header="Preencha os campos para realizar seu cadastro">
+				<h:panelGrid columns="1">
+					<h:panelGroup>
+						<p:outputLabel value="Nome:" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputText value="#{tarefaBean.tarefa.nome}" required="true"
+							requiredMessage="Campo 'NOME' obrigatório" size="40" />
+					</h:panelGroup>
+					<h:panelGroup>
+					<p:outputLabel value="Responsável:" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:selectOneMenu id="responsavel" value="#{tarefaBean.tarefa.usuario}"
+							size="30"
+							converterMessage="Não foi possível selecionar o Responsável da tarefa(Erro ao converter o objeto)"
+							converter="genericConverter">
+							<f:selectItem itemLabel="Selecione o responsável" />
+							<f:selectItems value="#{usuarioBean.usuarios}" var="user"
+								itemLabel="#{user.nome}" itemValue="#{user}" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+					<h:panelGroup>
+					<p:outputLabel value="Status da tarefa:" />
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:selectOneRadio id="statusTarefa" value="#{tarefaBean.tarefa.statusTarefa}"
+							size="30">
+							<f:selectItems value="#{tarefaBean.statusTarefas}" var="tarefa"
+								itemLabel="#{tarefa.descricao}" itemValue="#{tarefa}" />
+						</p:selectOneRadio>
+					</h:panelGroup>
+				</h:panelGrid>
+			</p:panel>
+			<p:panel>
+				<p:commandButton value="Cadastrar" action="#{tarefaBean.save}"
+					ajax="false" rendered="#{tarefaBean.tarefa.id == null}" />
+
+				<p:commandButton value="Atualizar" action="#{tarefaBean.update}"
+					ajax="false" rendered="#{tarefaBean.tarefa.id != null}" />
+
+				<p:commandButton value="Cancelar"
+					action="/pages/private/cadastro/index.xhtml" ajax="false"
+					immediate="true" rendered="#{tarefaBean.tarefa.id == null}" />
+
+				<p:commandButton value="Cancelar" action="#{tarefaBean.goToList()}"
+					ajax="false" immediate="true"
+					rendered="#{tarefaBean.tarefa.id != null}" />
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

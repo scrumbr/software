@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Erro 500</title>
+	<h:outputStylesheet library="css" name="pages.css" />
+	<link rel="shortcut icon" type="image/x-icon"
+		href="#{facesContext.externalContext.requestContextPath}/template/imagens/fcrs-favicon.ico" />
+</h:head>
+<h:body>
+
+	<h:form id="form">
+		<center>
+			<p:dialog styleClass="panel" visible="true" closable="false"
+				closeOnEscape="false" draggable="false" resizable="false"
+				showEffect="explode" width="800">
+
+				<h:panelGrid columns="2">
+					<p:graphicImage library="img" name="500.png" width="80" height="80" />
+					<h:outputLabel value="Erro 500!" styleClass="error" />
+				</h:panelGrid>
+				<br />
+				<h:outputLabel value="Erro interno de servidor!"
+					styleClass="error-info" />
+				<br />
+				<h:outputLabel
+					value="Entre em contato com o administrador do sistema."
+					styleClass="error-detail" />
+
+				<br />
+				<br />
+				<div class="menu_links_funcionais">
+					<h:panelGrid columns="4" cellpadding="10">
+						<center>
+							<h:commandLink id="lnkHome" action="/private/inicio.xhtml"
+								immediate="true" title="Voltar para página inicial">
+								<div class="menu_links_funcionais_home"></div>
+								<h:outputText value="Página Inicial" />
+							</h:commandLink>
+							<h:commandLink id="lnkDetalhes" action="/private/inicio.xhtml"
+								immediate="true" title="Voltar para página inicial">
+								<div class="menu_links_funcionais_email"></div>
+								<h:outputText value="Detalhes do Erro" />
+							</h:commandLink>
+							<h:commandLink id="lnkEmail" action="/private/inicio.xhtml"
+								immediate="true" title="Voltar para página inicial">
+								<div class="menu_links_funcionais_detalhe"></div>
+								<h:outputText value="Enviar por e-mail" />
+							</h:commandLink>
+						</center>
+					</h:panelGrid>
+				</div>
+			</p:dialog>
+		</center>
+
+		<p:dialog header="Detalhes do erro" closeOnEscape="true"
+			draggable="false" modal="true" resizable="false" widgetVar="error">
+
+			<h:form>
+				<!-- 				<h:inputTextarea value="#{erro.stackTrace}" readonly="true" /> -->
+			</h:form>
+		</p:dialog>
+
+	</h:form>
+
+
+
+</h:body>
+</html>

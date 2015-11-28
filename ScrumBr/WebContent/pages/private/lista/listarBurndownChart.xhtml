@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/padrao_administracao.xhtml">
+
+	<ui:define name="cabecalho">
+		<h:form id="FormularioTopo">
+			<div class="links_funcionais">
+				<div class="titulo_links_funcionais">
+					<div class="titulo_links_funcionais_imagem">
+						<h:graphicImage library="cabecalho"
+							name="icones-burndown-chart.png" />
+					</div>
+					<h1>
+						<h:outputText value="Gráfico Burndown Chart" />
+					</h1>
+					<h2>
+						<h:outputText
+							value="Selecione a sprint a acompanhe o seu andamento." />
+					</h2>
+				</div>
+				<div class="menu_links_funcionais">
+					<h:commandLink id="lnkHome" action="/pages/private/inicio.xhtml"
+						immediate="true" title="Voltar para página inicial">
+						<div class="menu_links_funcionais_home"></div>
+						<h:outputText value="Home" />
+					</h:commandLink>
+				</div>
+				<div style="clear: both" />
+			</div>
+		</h:form>
+	</ui:define>
+	<ui:define name="body">
+		<h:form id="formulario">
+			<p:panel
+				header="Selecionar a Sprint para gerar o gráfico de Burndown Chart"
+				toggleable="true">
+				<h:panelGrid columns="10">
+					<p:selectOneMenu style="width:450px" converter="genericConverter"
+						value="#{sprintBean.sprintFilter}">
+						<f:selectItem itemLabel="Selecione a Sprint" />
+						<f:selectItems value="#{sprintBean.listSprints}" var="sprint"
+							itemLabel="#{sprint.nome}" itemValue="#{sprint}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</p:panel>
+			<p:panel>
+				<p:chart type="line" model="#{borndownChartBean.dateModel}"
+					style="height:300px;" />
+			</p:panel>
+			<br />
+		</h:form>
+	</ui:define>
+</ui:composition>

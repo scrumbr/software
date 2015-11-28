@@ -1,0 +1,277 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/padrao_administracao.xhtml">
+
+	<ui:define name="cabecalho">
+		<h:form id="FormularioTopo">
+
+			<div class="links_funcionais">
+				<div class="titulo_links_funcionais">
+					<div class="titulo_links_funcionais_imagem">
+						<h:graphicImage library="cabecalho" name="icones-product-backlog.png" />
+					</div>
+					<h1>
+						<h:outputText value="Adicionar atividade ao Product Backlog"
+							rendered="#{productBacklogBean.productBacklog.id == null}" />
+						<h:outputText value="Atualizar atividade do Product Backlog"
+							rendered="#{productBacklogBean.productBacklog.id != null}" />
+					</h1>
+					<h2>
+						<h:outputText
+							value="Preencha os campos para adicionar uma atividade ao product backlog."
+							rendered="#{productBacklogBean.productBacklog.id == null}" />
+						<h:outputText
+							value="Preencha os campos para atualizar uma atividade do product backlog."
+							rendered="#{productBacklogBean.productBacklog.id != null}" />
+					</h2>
+				</div>
+
+				<div class="menu_links_funcionais">
+					<h:commandLink id="lnkHome" action="/pages/private/inicio.xhtml"
+						immediate="true" title="Voltar para página inicial">
+						<div class="menu_links_funcionais_home"></div>
+						<h:outputText value="Home" />
+					</h:commandLink>
+
+					<h:commandLink id="lnkCadastraProduct"
+						action="#{productBacklogBean.goToList()}" immediate="true"
+						title="Clique neste botão para listar o product backlog deste projeto.">
+						<div class="menu_links_funcionais_listar"></div>
+						<h:outputText value="Listar Product Backlog" />
+					</h:commandLink>
+
+				</div>
+
+				<div style="clear: both" />
+
+			</div>
+
+		</h:form>
+	</ui:define>
+	<ui:define name="body">
+
+		<t:saveState value="#{productBacklogBean.productBacklog}" />
+		<t:saveState value="#{productBacklogBean.lazy}" />
+		<t:saveState value="#{productBacklogBean.tarefa}" />
+		<t:saveState value="#{productBacklogBean.tarefas}" />
+		<t:saveState value="#{usuarioBean.usuarios}" />
+
+		<h:form id="formulario">
+			<br />
+			<p:panel >
+			<f:facet name="header">
+			<h:outputText value="Preencha os campos para realizar o cadastro da atividade ao Product Backlog" styleClass="labelHeaderPanel" />
+			</f:facet>
+				<h:panelGrid columns="1">
+					<h:panelGroup>
+						<br />
+						<p:outputLabel value="Nome:" styleClass="myLabel"/>
+						<h:outputText value=" * " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputText value="#{productBacklogBean.productBacklog.nome}"
+							required="true" requiredMessage="Campo 'NOME' obrigatório"
+							id="nome" size="60" />
+						<p:watermark value="Digite um nome para a atividade" for="nome"></p:watermark>
+					</h:panelGroup>
+					<br />
+
+					<h:panelGrid columns="2">
+						<p:commandButton value="Adicionar tarefa" icon="fa fa-plus-circle"
+							oncomplete="PF('dlg').show()" immediate="true" process="@this"
+							update=":Formulario2" id="add" styleClass="btn-blue"/>
+						<p:tooltip value="Adicionar tarefa a atividade do product backlog"
+							for="add" />
+					</h:panelGrid>
+
+					<p:dataTable id="table" var="tarefa"
+						value="#{productBacklogBean.tarefas}"
+						emptyMessage="Nenhuma tarefa foi inserida na lista"
+						rowIndexVar="index">
+						<p:column headerText="Nome">
+							<h:outputText value="#{tarefa.nome}" />
+						</p:column>
+
+						<p:column headerText="Status da tarefa">
+							<h:outputText value="#{tarefa.statusTarefa.descricao}" />
+						</p:column>
+
+						<p:column headerText="Responsável">
+							<h:outputText value="#{tarefa.usuario.nome}" />
+						</p:column>
+
+						<p:column headerText="Remover">
+
+							<p:commandLink action="#{productBacklogBean.removerTarefa}"
+								immediate="true" update="table :Formulario2" id="exc"
+								rendered="#{productBacklogBean.productBacklog.id == null}">
+								<div class="icones_excluir" />
+								<f:setPropertyActionListener
+									target="#{productBacklogBean.tarefa}" value="#{tarefa}" />
+							</p:commandLink>
+							<p:tooltip for="exc" value="Clique aqui excluir tarefa"/>
+							
+
+							<p:commandLink action="#{productBacklogBean.deleteTarefa}"
+								immediate="true" update="table :Formulario2" id="excluir"
+								rendered="#{productBacklogBean.productBacklog.id != null}">
+								<div class="icones_excluir" />
+								<f:setPropertyActionListener
+									target="#{productBacklogBean.tarefa}" value="#{tarefa}" />
+							</p:commandLink>
+							<p:tooltip for="excluir" value="Clique aqui para excluir tarefa"/>
+
+						</p:column>
+					</p:dataTable>
+
+					<br />
+				</h:panelGrid>
+			</p:panel>
+			<br/>
+			<p:panel>
+				<p:commandButton value="Cadastrar" icon="fa fa-save" id="salvar"
+					action="#{productBacklogBean.save}" ajax="false" styleClass="btn-green"
+					rendered="#{productBacklogBean.productBacklog.id == null}" />
+					<p:tooltip for="salvar" value="Clique aqui para salvar atividade"/>
+
+				<p:commandButton value="Atualizar" icon="fa fa-edit" styleClass="btn-green"
+					action="#{productBacklogBean.update}" ajax="false" id="editar"
+					rendered="#{productBacklogBean.productBacklog.id != null}" />
+				<p:tooltip for="editar" value="Clique aqui para atualizar atividade"/>
+
+				<p:commandButton value="Cancelar" icon="fa fa-ban" styleClass="btn-green"
+					action="/pages/private/cadastro/index.xhtml" ajax="false" id="cancel"
+					immediate="true" rendered="#{productBacklogBean.productBacklog.id == null}" />
+					<p:tooltip for="cancel" value="Clique aqui para cancelar o cadastro"/>
+
+				<p:commandButton value="Cancelar" icon="fa fa-ban" styleClass="btn-green"
+					action="#{productBacklogBean.goToList()}" ajax="false" id="cancelar"
+					immediate="true" rendered="#{productBacklogBean.productBacklog.id != null}" />
+					<p:tooltip for="cancelar" value="Clique aqui para cancelar a edição"/>
+			</p:panel>
+		</h:form>
+
+		<h:form id="Formulario2" prependId="false">
+
+			<p:dialog header="" resizable="false" closeOnEscape="true"
+				modal="true" id="dlg" widgetVar="dlg" width="1000"
+				maximizable="true">
+
+				<p:messages showDetail="true" showSummary="true" autoUpdate="true" />
+
+				<f:facet name="header">
+					<h:outputText value="Adicionar tarefa" styleClass="labelHeader" />
+				</f:facet>
+				<h:panelGroup id="cadTarefa">
+					<h:panelGrid columns="1">
+						<h:panelGroup>
+							<h:outputText styleClass="myLabel" value="Nome:" />
+							<h:outputText value=" * " styleClass="campoObrigatorio" />
+							<br />
+							<p:watermark value="Digite o nome para a tarefa" for="nome"></p:watermark>
+							<p:inputText value="#{productBacklogBean.tarefa.nome}" id="nome"
+								required="true" requiredMessage="Campo 'NOME' obrigatório"
+								size="40" />
+						</h:panelGroup>
+						<h:panelGroup>
+							<h:outputText styleClass="myLabel" value="Responsável:" />
+							<h:outputText value=" * " styleClass="campoObrigatorio" />
+							<br />
+							<p:selectOneMenu id="responsavel"
+								value="#{productBacklogBean.tarefa.usuario}" size="30"
+								converterMessage="Não foi possível selecionar o Responsável da tarefa(Erro ao converter o objeto)"
+								converter="genericConverter">
+								<f:selectItem itemLabel="Selecione o responsável" />
+								<f:selectItems value="#{usuarioBean.usuarios}" var="user"
+									itemLabel="#{user.nome}" itemValue="#{user}" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+						<h:panelGroup>
+							<h:outputText styleClass="myLabel" value="Status da tarefa:" />
+							<h:outputText value=" * " styleClass="campoObrigatorio" />
+							<br />
+							<p:selectOneRadio id="statusTarefa"
+								value="#{productBacklogBean.tarefa.statusTarefa}" size="30">
+								<f:selectItems value="#{tarefaBean.statusTarefas}" var="tarefa"
+									itemLabel="#{tarefa.descricao}" itemValue="#{tarefa}" />
+							</p:selectOneRadio>
+						</h:panelGroup>
+						<h:panelGroup>
+						<h:outputText styleClass="myLabel" value="Tempo estimado:" />
+							<h:outputText value=" * " styleClass="campoObrigatorio" />
+							<br />
+							<p:spinner id="step"
+								value="#{productBacklogBean.tarefa.tempoAtividade}"
+								stepFactor="2" />
+						</h:panelGroup>
+					</h:panelGrid>
+
+				</h:panelGroup>
+
+				<br/>
+
+				<p:commandButton id="btnCadTarefa"
+					value="Adicionar na lista de tarefas" icon="ui-icon-plus"
+					action="#{productBacklogBean.saveTarefa()}" styleClass="btn-blue"
+					update="gridTable cadTarefa :formulario:table"
+					rendered="#{productBacklogBean.productBacklog.id == null}">
+				</p:commandButton>
+				<p:tooltip for="btnCadTarefa" value="Clique aqui adicionar tarefa na lista de tarefas"/>
+				<p:commandButton value="Adicionar na lista de tarefas" id="add"
+					rendered="#{productBacklogBean.productBacklog.id != null}"
+					icon="ui-icon-plus" styleClass="btn-blue"
+					action="#{productBacklogBean.salvarTarefaNoBanco}"
+					update=":formulario:table gridTable" />
+					<p:tooltip for="add" value="Clique aqui para adicionar tarefa na lista de tarefas"/>
+				<br />
+				<br />
+
+				<p:dataTable id="gridTable" var="tarefa"
+					value="#{productBacklogBean.tarefas}"
+					emptyMessage="Nenhuma tarefa foi inserida na lista"
+					rowIndexVar="index">
+
+					<p:column headerText="Nome">
+						<h:outputText value="#{tarefa.nome}" />
+					</p:column>
+
+					<p:column headerText="Status da tarefa">
+						<h:outputText value="#{tarefa.statusTarefa.descricao}" />
+					</p:column>
+
+					<p:column headerText="Responsável">
+						<h:outputText value="#{tarefa.usuario.nome}" />
+					</p:column>
+
+					<p:column headerText="Remover">
+
+						<p:commandLink action="#{productBacklogBean.removerTarefa}"
+							immediate="true" update="gridTable :formulario:table"
+							rendered="#{tarefa.id == null}" id="del">
+							<div class="icones_excluir" />
+							<f:setPropertyActionListener
+								target="#{productBacklogBean.tarefa}" value="#{tarefa}" />
+						</p:commandLink>
+
+						<p:commandLink action="#{productBacklogBean.deleteTarefa}"
+							immediate="true" update="gridTable :formulario:table"
+							rendered="#{tarefa.id != null}" id="delete">
+							<div class="icones_excluir" />
+							<f:setPropertyActionListener
+								target="#{productBacklogBean.tarefa}" value="#{tarefa}" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+
+			</p:dialog>
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>

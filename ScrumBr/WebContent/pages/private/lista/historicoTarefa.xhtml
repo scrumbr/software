@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/padrao_administracao.xhtml">
+
+	<ui:define name="cabecalho">
+		<h:form id="FormularioTopo">
+
+			<div class="links_funcionais">
+				<div class="titulo_links_funcionais">
+					<div class="titulo_links_funcionais_imagem">
+						<h:graphicImage library="cabecalho" name="grandeArea.png" />
+					</div>
+					<h1>
+						<h:outputText value="Histórico de alterações nas tarefas" />
+					</h1>
+					<h2>
+						<h:outputText
+							value="Segue uma lista dos registros das alterações nas tarefas." />
+					</h2>
+				</div>
+
+				<div class="menu_links_funcionais">
+					<h:commandLink id="lnkHome" action="/pages/private/inicio.xhtml"
+						immediate="true" title="Voltar para página inicial">
+						<div class="menu_links_funcionais_home"></div>
+						<h:outputText value="Home" />
+					</h:commandLink>
+				</div>
+
+				<div style="clear: both" />
+
+			</div>
+
+		</h:form>
+	</ui:define>
+	<ui:define name="body">
+
+		<t:saveState value="#{historicoAlteracaoTarefaBean.lazy}" />
+
+		<h:form id="formulario">
+
+			<p:panel header="Campos de pesquisa" toggleable="true">
+
+				<h:panelGrid columns="10">
+
+					<p:outputLabel value="Data da alteração - De: " styleClass="myLabel" />
+					<h:panelGroup>
+						<p:inputMask id="dataInicio"
+							value="#{historicoAlteracaoTarefaBean.historicoAlteracaoTarefaFilter.dataAlteracaoInicio}"
+							placeHolder=" " mask="99/99/9999" size="10"
+							validatorMessage="Não é uma data válida">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:inputMask>
+						<p:outputLabel value=" Até: " styleClass="myLabel" />
+						<p:inputMask
+							value="#{historicoAlteracaoTarefaBean.historicoAlteracaoTarefaFilter.dataAlteracaoFim}"
+							placeHolder=" " mask="99/99/9999" size="10"
+							validatorMessage="Não é uma data válida">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:inputMask>
+					</h:panelGroup>
+					<p:outputLabel value="Participante:" />
+					<p:selectOneMenu id="participante"
+						value="#{historicoAlteracaoTarefaBean.historicoAlteracaoTarefaFilter.usuario}"
+						size="30"
+						converterMessage="Não foi possível selecionar o Responsável da tarefa(Erro ao converter o objeto)"
+						converter="genericConverter">
+						<f:selectItem itemLabel="Selecione o participante" />
+						<f:selectItems value="#{usuarioBean.usuarios}" var="user"
+							itemLabel="#{user.nome}" itemValue="#{user}" />
+					</p:selectOneMenu>
+					<p:commandButton value="Buscar" icon="ui-icon-search"
+						styleClass="btn-blue"
+						action="#{historicoAlteracaoTarefaBean.list()}"
+						update=":formulario:tabelaHistorico" />
+				</h:panelGrid>
+			</p:panel>
+
+			<br />
+
+			<p:dataTable id="tabelaHistorico"
+				value="#{historicoAlteracaoTarefaBean.lazy}" lazy="true"
+				var="entity" paginator="true" rows="10"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{currentPage} de {totalPages}"
+				paginatorPosition="bottom" rowIndexVar="row"
+				emptyMessage="Nenhum registro encontrado." filterEvent="enter"
+				widgetVar="dadosTabela">
+
+				<p:column id="data" headerText="Data da alteração" width="150"
+					styleClass="centralizado">
+					<h:outputText value="#{entity.dataAlteracao}" />
+				</p:column>
+
+				<p:column headerText="Hora" width="60" styleClass="centralizado">
+					<h:outputText value="#{entity.dataAlteracao}">
+						<f:convertDateTime pattern="HH:mm:ss" locale="pt_BR"
+							timeZone="America/Fortaleza" />
+					</h:outputText>
+				</p:column>
+
+				<p:column id="nome" headerText="Participante" >
+					<h:outputText value="#{entity.usuario.nome}" />
+				</p:column>
+
+				<p:column headerText="Tarefa">
+					<h:outputText value="#{entity.tarefa.nome}" />
+				</p:column>
+
+				<p:column headerText="Product Backlog">
+					<h:outputText value="#{entity.tarefa.productBacklog.nome}" />
+				</p:column>
+				
+				<p:column headerText="Sprint">
+					<h:outputText value="#{entity.tarefa.productBacklog.sprint.nome}" />
+				</p:column>
+				
+				<p:column id="status" headerText="Status do histórico" width="190">
+					<h:outputText value="#{entity.statusTarefaAlteracao.descricao}" />
+				</p:column>
+				
+
+			</p:dataTable>
+
+
+			<br />
+		</h:form>
+
+	</ui:define>
+</ui:composition>

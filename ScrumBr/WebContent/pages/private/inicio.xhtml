@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/padrao_administracao.xhtml"
+	xmlns:t="http://myfaces.apache.org/tomahawk">
+
+	<ui:define name="body">
+		<t:saveState value="#{tarefaBean.tarefas}" />
+		<t:saveState value="#{tarefaBean.tarefa}" />
+
+		<center>
+			<br /> <br /> <br />
+			<!-- 			<p:graphicImage -->
+			<!-- 				style="box-shadow: 3px 6px 37px 1px rgba(25, 36, 0, 4.3);" -->
+			<!-- 				rendered="#{projetoSessaoBean.projetoSelecionado == null}" -->
+			<!-- 				url="/template/imagens/ScrumBR.png" /> -->
+		</center>
+
+		<h:form id="formualario"
+			rendered="#{projetoSessaoBean.projetoSelecionado != null}">
+			<h:panelGrid columns="2" columnClasses="column1, column2" style="width:100%;" >
+				<h:panelGroup >
+					<p:panel header="Status do projeto" toggleable="true">
+						<p:spacer height="95" />
+						<p:progressBar style="height:100px" value="#{tarefaBean.total()}"
+							labelTemplate="{value}%" displayOnly="true" />
+						<p:spacer height="95" />
+					</p:panel>
+				</h:panelGroup>
+				<h:panelGroup >
+					<p:panel 
+						header="Situação da Sprint atual "
+						toggleable="true">
+						<p:chart id="pie" type="pie" model="#{tarefaBean.pieModel1}" style="height:300px">
+						</p:chart>
+					</p:panel>
+				</h:panelGroup>
+			</h:panelGrid>
+			<br />
+			<br />
+			<p:panel header="Status por Sprint" toggleable="true">
+				<p:chart responsive="true" type="bar" model="#{sprintBean.barModel}"
+					style="height:300px" />
+			</p:panel>
+			<br />
+			<br />
+			<p:panel header="Tarefas" toggleable="true">
+				<h:panelGrid columns="10">
+					<p:selectOneMenu style="width:450px" effect="fade" filter="true"
+						filterMatchMode="startsWith" value="#{tarefaBean.sprintFilter}"
+						converter="genericConverter">
+						<f:selectItem itemLabel="Selecione a Sprint" />
+						<f:selectItems value="#{sprintBean.listSprints}" var="sprint"
+							itemLabel="#{sprint.nome}" itemValue="#{sprint}" />
+						<f:selectItems value="#{selectOneMenuView.themes}" var="theme"
+							itemLabel="#{theme.displayName}" itemValue="#{theme}" />
+
+						<p:ajax listener="#{tarefaBean.listandoTarefas()}"
+							update="tabelaTarefa" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+				<br />
+				<p:dataTable id="tabelaTarefa" value="#{tarefaBean.tarefas}"
+					lazy="true" var="entity" paginator="true" rows="10"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{currentPage} de {totalPages}"
+					paginatorPosition="bottom" rowIndexVar="row"
+					emptyMessage="Nenhum registro encontrado." filterEvent="enter"
+					widgetVar="dadosTabela">
+
+					<p:column id="nome" headerText="Nome">
+						<h:outputText value="#{entity.nome}" />
+					</p:column>
+
+					<p:column id="responsavel" headerText="Responsável">
+						<h:outputText value="#{entity.usuario.nome}" />
+					</p:column>
+
+					<p:column id="tempo" headerText="Tempo(horas)" width="100">
+						<h:outputText value="#{entity.tempoAtividade}" />
+					</p:column>
+
+					<p:column id="dificuldade" headerText="Dificuldade" width="100">
+						<h:outputText value="#{entity.dificuldadeTarefa.descricao}" />
+					</p:column>
+
+					<p:column id="status" headerText="Status" width="100">
+						<h:outputText value="#{entity.statusTarefa.descricao}" />
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
+
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>

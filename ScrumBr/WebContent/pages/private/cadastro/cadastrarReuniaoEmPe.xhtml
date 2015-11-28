@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/padrao_administracao.xhtml">
+
+<ui:define name="cabecalho">
+		<h:form id="FormularioTopo">
+
+			<div class="links_funcionais">
+				<div class="titulo_links_funcionais">
+					<div class="titulo_links_funcionais_imagem">
+						<h:graphicImage library="cabecalho" name="icones-daily-scrum.png" />
+					</div>
+					<h1>
+						<h:outputText value="Registrar reunião diária"
+							rendered="#{reuniaoEmPeBean.reuniaoEmPe.id == null}" />
+						<h:outputText value="Atualizar registro da reunião"
+							rendered="#{reuniaoEmPeBean.reuniaoEmPe.id != null}" />
+					</h1>
+					<h2>
+						<h:outputText value="Preencha os campos para registrar uma reunião diária."
+							rendered="#{reuniaoEmPeBean.reuniaoEmPe.id == null}" />
+						<h:outputText value="Preencha os campos para atualizar os dados da reunião."
+							rendered="#{reuniaoEmPeBean.reuniaoEmPe.id != null}" />
+					</h2>
+				</div>
+
+				<div class="menu_links_funcionais">
+					<h:commandLink id="lnkHome" action="/pages/private/inicio.xhtml"
+						immediate="true" title="Voltar para página inicial">
+						<div class="menu_links_funcionais_home"></div>
+						<h:outputText value="Home" />
+					</h:commandLink>
+
+					<h:commandLink id="lnkCadastraFluxo" action="#{reuniaoEmPeBean.goToList()}"
+						immediate="true"
+						title="Clique neste botão para listar os registros da reuniões diárias.">
+						<div class="menu_links_funcionais_listar"></div>
+						<h:outputText value="Listar Registro de reuniões" />
+					</h:commandLink>
+
+				</div>
+
+				<div style="clear: both" />
+
+			</div>
+
+		</h:form>
+	</ui:define>
+	<ui:define name="body">
+
+		<t:saveState value="#{reuniaoEmPeBean.lazy}" />
+		<t:saveState value="#{reuniaoEmPeBean.reuniaoEmPes}" />
+		<t:saveState value="#{reuniaoEmPeBean.reuniaoEmPe}" />
+		<t:saveState value="#{reuniaoEmPeBean.reuniaoEmPeFilter}" />
+		<h:form id="formulario">
+
+			<br />
+			<p:panel header="Preencha os campos para registrar um Reunião Diária">
+				<h:panelGrid columns="1">
+					<h:panelGroup>
+						<h:outputLabel
+							value="Usuário: #{escopoSessaoBean.usuarioLogado.nome}"
+							styleClass="labelHeader" />
+					</h:panelGroup>
+						<h:panelGroup>
+							<p:outputLabel value="Data da Reunião:" />
+							<h:outputText value=" * " styleClass="campoObrigatorio" />
+							<br />
+							<p:inputMask mask="99/99/9999" id="data"
+								value="#{reuniaoEmPeBean.reuniaoEmPe.dataReuniao}"
+								required="true" styleClass="myLabel" label="Data da reunião"
+								requiredMessage="Campo de data de cadastro é obrigatório" />
+								<p:watermark value="99/99/9999" for="data"></p:watermark>
+						</h:panelGroup>
+					<h:panelGroup>
+						<h:outputText
+							value="O que você realizou desde a última reunião de equipe?" />
+						<h:outputText value="* " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputTextarea size="80" cols="120"
+							title="Digite o que você realizou desde a última reunião de equipe do projeto"
+							value="#{reuniaoEmPeBean.reuniaoEmPe.queFez}" required="true"
+							requiredMessage="O campo 'O que você realizou desde a última reunião de equipe?' é obrigatório">
+						</p:inputTextarea>
+					</h:panelGroup>
+					<h:panelGroup>
+						<h:outputText value="Quais obstáculos está encontrando?" />
+						<h:outputText value="* " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputTextarea size="80" cols="120"
+							title="Digite quais obstáculos está encontrando?"
+							value="#{reuniaoEmPeBean.reuniaoEmPe.qualDificuldade}"
+							required="true"
+							requiredMessage="O campo 'Quais obstáculos está encontrando?' é obrigatório">
+						</p:inputTextarea>
+					</h:panelGroup>
+					<h:panelGroup>
+						<h:outputText
+							value="O que planeja realizar até a próxima reunião da equipe?" />
+						<h:outputText value="* " styleClass="campoObrigatorio" />
+						<br />
+						<p:inputTextarea size="80" cols="120"
+							title="Digite o que planeja realizar até a próxima reunião da equipe?"
+							value="#{reuniaoEmPeBean.reuniaoEmPe.queVaiFazer}"
+							required="true"
+							requiredMessage="O campo 'O que planeja realizar até a próxima reunião da equipe?' é obrigatório">
+						</p:inputTextarea>
+					</h:panelGroup>
+				</h:panelGrid>
+			</p:panel>
+			<br />
+			<p:panel>
+				<p:commandButton value="Cadastrar" action="#{reuniaoEmPeBean.save}"
+					styleClass="btn-green" id="add" ajax="false" icon="fa fa-save"
+					rendered="#{reuniaoEmPeBean.reuniaoEmPe.id == null}" />
+					<p:tooltip value="Adicionar uma reunião diaria" for="add" />
+
+				<p:commandButton value="Atualizar"
+					icon="fa fa-edit" styleClass="btn-green" id="editar"
+					action="#{reuniaoEmPeBean.update}" ajax="false"
+					rendered="#{reuniaoEmPeBean.reuniaoEmPe.id != null}" />
+					<p:tooltip for="editar" value="Clique aqui para atualizar a reunião diaria"/>
+
+				<p:commandButton value="Cancelar" icon="fa fa-ban" styleClass="btn-green" id="cancel"
+					action="/pages/private/cadastro/index.xhtml" ajax="false"
+					immediate="true"
+					rendered="#{reuniaoEmPeBean.reuniaoEmPe.id == null}" />
+					<p:tooltip for="cancel" value="Clique aqui para cancelar o cadastro"/>
+
+				<p:commandButton value="Cancelar"
+					action="#{reuniaoEmPeBean.goToList()}" 
+					ajax="false" immediate="true" icon="fa fa-ban" styleClass="btn-green" id="cancelar"
+					rendered="#{reuniaoEmPeBean.reuniaoEmPe.id != null}" />
+					<p:tooltip for="cancelar" value="Clique aqui para cancelar o cadastro"/>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
